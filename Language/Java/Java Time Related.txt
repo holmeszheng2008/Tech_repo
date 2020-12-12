@@ -1,0 +1,52 @@
+try {
+			// Text being local date time with system default time zone added.
+			System.out.println(new SimpleDateFormat("yyyy-MM-dd").parse("2020-06-10")); // -> Wed Jun 10 00:00:00 EDT 2020
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// Local time with local time zone id
+		Date dTime = new Date();
+		System.out.println(dTime); // Wed Jun 10 00:43:36 EDT 2020;
+		
+		// local time without local time zone id
+		LocalDateTime ldt = LocalDateTime.now();
+		System.out.println(ldt); // 2020-06-10T00:43:36.141
+
+		LocalDateTime ldtFromDate = LocalDateTime.ofInstant(dTime.toInstant(), ZoneId.systemDefault());
+		System.out.println(ldtFromDate); // 2020-06-10T00:43:36.141
+		
+		LocalDateTime ldtParsed = LocalDateTime.parse("2020-06-10T00:40:17.126");
+		System.out.println(ldtParsed);
+		
+		//local time with local time zone id
+		ZonedDateTime zDateTime = ldt.atZone(ZoneId.systemDefault()); // this simply combines localdatetime and input zone
+		System.out.println(zDateTime); // 2020-06-10T00:43:36.141-04:00[America/New_York]
+		
+		ZonedDateTime zdtNow = ZonedDateTime.now();
+		System.out.println(zdtNow); // 2020-06-10T00:43:36.141-04:00[America/New_York] same as [new Date()]
+
+		// local time with time zone always being UTC "Z"
+		Instant instFromZdt = zDateTime.toInstant();
+		System.out.println(instFromZdt); // 2020-06-10T04:43:36.141Z
+		Instant instFromDTime = dTime.toInstant();
+		System.out.println(instFromDTime); // 2020-06-10T04:43:36.141Z
+
+		// from milliseconds
+		// This is milliseconds at UTC from 1970/01/01 midnight
+		long currentMillis = System.currentTimeMillis();
+		// to instant at 'Z'
+		Instant instance = java.time.Instant.ofEpochMilli(millis);
+		// convert from UTC to timezone "Asia/Kolkata" and discard it
+		LocalDateTime localDateTime = java.time.LocalDateTime.ofInstant(instance, java.time.ZoneId.of("Asia/Kolkata"));
+		// convert from UTC to timezone "Aisa/Kolkata"
+		ZonedDateTime zonedDateTime = java.time.ZonedDateTime.ofInstant(instance, java.time.ZoneId.of("Asia/Kolkata"));
+
+
+In Summary:
+two kinds of time presentation:
+(1) with time zone
+(2) without timezone
+
+use zoneId to convert to different zoned times

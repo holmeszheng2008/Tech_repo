@@ -1,0 +1,20 @@
+package com.ericStudio;
+
+public class StreamTest {
+	public static void main(String[] args) {
+		GenericTest<Integer> a = new GenericTest<Integer>();
+		
+		// Raw type GenericTest on the left is the same as GenericTest<?>, on the right is the same as GenericTest<Object>
+		// Conversion from GenericTest<?> to GenericTest<String> should be explicit.
+		// Conversion from Raw type GenericTest to GenericTest<String> could be implicit.
+		GenericTest<?> b1 = a;
+		GenericTest<String> c1 = (GenericTest<String>) b1;
+		
+		GenericTest b2 = a;
+		GenericTest<String> c2 = b2;
+	}
+}
+
+class GenericTest<T> {
+	
+}
