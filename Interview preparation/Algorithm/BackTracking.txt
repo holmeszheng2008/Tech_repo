@@ -14,3 +14,12 @@ depth first search (iteration or recursive)
 1 -> 4 -> 2
 1 -> 5 -> 3
 etc
+
+procedure:
+
+(1) draw the tree shaped solution expansion
+(2) base cases
+(3) transition function
+	since solution is found at the position of leaves, the answer collection will be passed in the recursive function.
+	eg: 	 public void backtrack(String digits, String prefix, List<String> ans)
+		 public void backtrack(String prefix, int open, int close, int max, List<String> ans)

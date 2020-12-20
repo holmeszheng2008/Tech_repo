@@ -1,0 +1,40 @@
+All recursions have following steps:
+(1) base cases
+(2) transition functions
+
+
+Difference on details deriving from algorithms
+(1) divide and conquer
+	just recursion, no overlapping sub problems.
+in recursive function, in place problem solving, pass initial problem as parameter, return void.
+
+(2) DP
+a. base cases
+b. transition function. condition, direction. will influence direction from border inward in matrix.
+c. tabulation (populate matrix from base cases) / memoization (null if answer of sub-problem not memoized yet)
+
+
+(3) Tree structure algorithm
+a. general
+	Depending if the base solution is on the leaves or not: Breath first search, Depth first search
+
+	Depth first search:
+	i. recursion, always think and achieve in this way first.
+		general workflow:		NLNRN
+			at the place of leaves, check it (N), check left and return something(L), do something (N), check right and return something(R), do something like set(N)
+			preorder: NLR
+			inorder: LNR
+			postorder: LRN
+	ii. Non recursion, to transfrom from the corresponding recursive solution.
+		general workflow:		use stack to push and pop nodes. If use non-recursion to achieve NLNRN, it's gonna to so hard.
+					
+			preorder:		when a node is popped, do something on it and push its right, push its left.
+			inorder:		when a node is popped the first time, if its left and right are both null or its mark is 2, do something, else push its right, push itself and mark push times to 2 and push left.
+			postorder:	when a node is popped the first time, if its left and right are both null or its mark is 2, do something, else push itslef and mark push time to 2, push its right, push its left.
+			
+	
+	
+
+b. backtracking
+	since solutions can only be got at the place of leaves, use the DFS solution from above, NLNRN
+		In the recursive function, result array passed as parameter, filled at leaves.
