@@ -31,6 +31,8 @@ a. general
 			preorder:		when a node is popped, do something on it and push its right, push its left.
 			inorder:		when a node is popped the first time, if its left and right are both null or its mark is 2, do something, else push its right, push itself and mark push times to 2 and push left.
 			postorder:	when a node is popped the first time, if its left and right are both null or its mark is 2, do something, else push itslef and mark push time to 2, push its right, push its left.
+
+Since connection among nodes will be re-constructed, usually root is returned in recursive functions.
 			
 	
 	

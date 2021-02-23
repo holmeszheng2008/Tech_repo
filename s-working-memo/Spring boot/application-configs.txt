@@ -1,0 +1,100 @@
+# base.properties
+endpoints.jmx.enabled=false
+management.endpoints.jmx.exposure.exclude=*
+management.endpoint.health.show-details=always
+
+# base.yaml
+app:
+  info:
+    title: <title>
+    description: <des>
+
+core:
+  pool-size: 5
+  retry:
+    attempts: 3
+    delay: 1000
+  expire: 4
+
+management:
+  endpoints:
+    web:
+      base-path: /manage
+      exposure:
+        include: "*"
+
+server:
+  servlet:
+    context-path: /
+spring:
+  cache:
+    cache-names: cache:<repo>:auth-token
+    type: caffeine
+    caffeine:
+      spec: expireAfterWrite=5h
+  kafka:
+    listener:
+      ack-mode: MANUAL_IMMEDIATE
+    consumer:
+      auto-offset-reset: latest
+      enable-auto-commit: false
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.add.type.headers: true
+
+
+# application-local.yaml
+spring:
+  redis:
+    host: <host>
+    password: <password>
+    port: 30379
+    timeout: 30h
+    database: 2
+    lettuce:
+      shutdown-timeout: 200
+      pool:
+        max-active: 20
+        max-idle: 8
+        max-wait: -1
+        min-idle: 0
+  kafka:
+    consumer:
+      group-id: <repo>-ist-local-20210128
+    bootstrap-servers: <bootstrap-server>
+    properties:
+      schema.registry.url: [urls]
+      request.timeout.ms: ${request_timeout_ms:300000}
+      security.protocol: SASL_PLAINTEXT
+      acks: all
+      retries: 5
+      max.in.flight.requests.per.connection: 1
+system:
+  environment:
+    java.security.auth.login.config: <path>
+    java.security.krb5.conf: <path>
+    javax.security.auth.useSubjectCredsOnly: true
+
+cassandra:
+  contactpoints: [list]
+  port: 9042
+  keyspace: <default-space>
+  username: <username>
+  password: <password>
+
+
+# note: when using a redis connection pool
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-redis</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-pool2</artifactId>
+    </dependency>

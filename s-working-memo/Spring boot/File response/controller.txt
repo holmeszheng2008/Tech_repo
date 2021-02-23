@@ -1,0 +1,45 @@
+@GetMapping("/fixing/historical/{fixingid}")
+@ApiOperation("Fetch fixingseries in a file for fixingId during timeframe [startDate, endDate)")
+public ResponseEntity getFixingHistorical(
+        @PathVariable(name = "fixingid", required = true) @NotNull String fixingId,
+        @RequestParam(name = "type", required = false) String type,
+        @RequestParam(name = "startdate", required = false) @DateTimeFormat(iso = ISO.DATE) LocalDate startDate,
+        @RequestParam(name = "enddate", required = false) @DateTimeFormat(iso = ISO.DATE) LocalDate endDate,
+        @RequestParam(name = "downloadonly", defaultValue = "true") boolean downloadOnly) throws IOException {
+    fixingId = fixingId.toUpperCase();
+    if (type != null) {
+        type = type.toLowerCase();
+    }
+    if (!downloadOnly) {
+        List<FixingSeries> resultList = fixingService.getHistorical(fixingId, type, startDate, endDate);
+        if (resultList.isEmpty()) {
+            String errMsg = String.format(
+                    "Historical fixing series of fixingid: %s, startdate: %s, enddate: %s not found", fixingId,
+                    (startDate == null) ? "not date" : startDate, (endDate == null) ? "not date" : endDate);
+            log.info(errMsg);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errMsg);
+        }
+
+        return ResponseEntity.ok(resultList);
+    }
+
+    File file = fixingService.saveHistoricalToFile(fixingId, type, startDate, endDate);
+    if (file == null) {
+        String errMsg = String.format(
+                "Historical fixing series of fixingid: %s, startdate: %s, enddate: %s not found", fixingId,
+                (startDate == null) ? "not date" : startDate, (endDate == null) ? "not date" : endDate);
+        log.info(errMsg);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errMsg);
+    }
+
+    InputStreamResource resource = new CleanupInputStreamResource(file);
+    String downloadFileName = file.getName().substring(0, file.getName().indexOf("&") - 1) + ".csv";
+
+    HttpHeaders headers = new HttpHeaders();
+    ContentDisposition contentDisposition = ContentDisposition.builder("inline")
+            .filename(downloadFileName).build();
+    headers.setContentDisposition(contentDisposition);
+
+    return ResponseEntity.ok().contentLength(file.length()).contentType(MediaType.APPLICATION_OCTET_STREAM)
+            .headers(headers).body(resource);
+}

@@ -1,0 +1,13 @@
+dpmmso deploy steps
+
+sudo su - dpmmso
+history
+
+cd /home/dpmmso 
+./deploy.sh -a rateresetupdater -v 0.20.0-b14
+exit $?
+cd /home/dpmmso 
+./deploy.sh -a marketdatahistoryrs -v 1.24.0-b30
+exit $?
+cd /home/dpmmso 
+./deploy.sh -a dssextractrs -v 1.12.0-SNAPSHOT-b2

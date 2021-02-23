@@ -1,0 +1,42 @@
+Spring JWT Auth
+This library provides JWT authentication for a Spring-based project.
+
+For Spring Boot, add spring-boot-starter-security:
+
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-security</artifactId>
+</dependency>
+Example configuration:
+
+@ConfigurationProperties
+@EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements JwtTokenSecretConfig {
+    private String jwtTokenSecret;
+
+    @Override
+    public String getJwtTokenSecret() {
+        return jwtTokenSecret;
+    }
+
+    public void setJwtTokenSecret(String jwtTokenSecret) {
+        this.jwtTokenSecret = jwtTokenSecret;
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+            .csrf().disable().authorizeRequests()
+            .anyRequest().permitAll()
+            .and()
+            .addFilter(new JwtAuthFilter(authenticationManager(), this))
+            .sessionManagement()
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+    }
+}
+After that, use @RequiresAuthentication to secure a REST controller method.
+
+Finally, make sure config yml has this:
+
+jwtTokenSecret: yourJwtTokenSecret

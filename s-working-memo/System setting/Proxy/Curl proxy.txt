@@ -1,0 +1,5 @@
+Curl use the system http setting $http_proxy
+
+use unset http_proxy
+	or
+run curl with --noproxy "*"

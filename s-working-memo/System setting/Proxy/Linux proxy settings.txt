@@ -1,0 +1,71 @@
+1. Wired connection settings: (GUI setting or set in /etc/environment) GUI setting may not be the system one somehow.
+	http://proxyprd.scotia-capital.com:8080
+	proxyprd.scotia-capital.com is enough
+This will influence kubectl.
+
+Instead just manually config firefox proxy.
+
+http_proxy="http://proxyprd.scotia-capital.com:8080"
+https_proxy="http://proxyprd.scotia-capital.com:8080"
+ftp_proxy="http://proxyprd.scotia-capital.com:8080"
+no_proxy="localhost,127.0.0.1,*.bns"
+HTTP_PROXY="http://proxyprd.scotia-capital.com:8080"
+HTTPS_PROXY="http://proxyprd.scotia-capital.com:8080"
+FTP_PROXY="http://proxyprd.scotia-capital.com:8080"
+NO_PROXY="localhost,127.0.0.1,*.bns"
+
+
+2. apt:
+touch /etc/apt/apt.conf.d/proxy.conf
+Add
+Acquire::http::Proxy "http://proxyprd.scotia-capital.com:8080/";
+Acquire::https::Proxy "http://proxyprd.scotia-capital.com:8080/";
+
+3. git:
+gitconfig
+From same domain repository:
+(1) http
+	sslVerify = flase
+	proxy = ""
+(2) https
+	the same as http
+
+From different domain repository:
+(1) http:
+	sslVerify = true
+	proxy = "http://proxyprd.scotia-capital.com:8080/"
+(2) https:
+	the same as http
+
+4. Docker setting: don't install docker using snap (not reliable)
+~/.docker/config.json
+{
+ "proxies":
+ {
+   "default":
+   {
+     "httpProxy": "http://proxyprd.scotia-capital.com:8080",
+     "httpsProxy": "http://proxyprd.scotia-capital.com:8080",
+     "ftpProxy": "http://proxyprd.scotia-capital.com:8080",
+     "noProxy": "localhost,127.0.0.1,*.bns"
+   }
+ }
+}
+
+
+
+5. proxy setting for snap and ppa repository: (System proxy configuration)
+in /etc/environment add following
+	env virables for all users
+http_proxy=http://proxyprd.scotia-capital.com:8080
+https_proxy=http://proxyprd.scotia-capital.com:8080
+systemctl restart snapd (restart snapd)
+
+Test: notepad++ could be installed through snap
+snap install notepadqq
+
+note: This is the system proxy setting and will be automatically used in many places like smartgit proxy if you allow auto-detect the system proxy or eclipse if you allow native network proxy
+
+6. system env variable
+export http_proxy=http://proxyprd.scotia-capital.com:8080
+export https_proxy=http://proxyprd.scotia-capital.com:8080

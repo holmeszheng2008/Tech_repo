@@ -1,0 +1,19 @@
+@ReadingConverter
+public class StubRateInfoReadConverter implements Converter<String, StubRateInfoContent> {
+    private ObjectMapper om;
+
+    public StubRateInfoReadConverter(ObjectMapper om) {
+        this.om = om;
+    }
+
+    @Override
+    public StubRateInfoContent convert(String source) {
+        try {
+            return om.readValue(source, StubRateInfoContent.class);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        throw new ApiException("stub rate info can't be pasrsed from cassandra");
+    }
+}

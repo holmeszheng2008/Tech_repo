@@ -1,0 +1,18 @@
+public class StubRateInfoWriteConverter implements Converter<StubRateInfoContent, String> {
+    private ObjectMapper om;
+
+    public StubRateInfoWriteConverter(ObjectMapper om) {
+        this.om = om;
+    }
+
+    @Override
+    public String convert(StubRateInfoContent source) {
+        try {
+            return om.writeValueAsString(source);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        throw new ApiException("Stub rate info can't be written to json");
+    }
+}

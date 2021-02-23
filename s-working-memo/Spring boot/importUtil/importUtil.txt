@@ -1,0 +1,58 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.nio.charset.Charset;
+import java.util.List;
+
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
+
+public class Importer {
+    private final String[] pxvMappingHeader = new String[] {"currency", "freq", "refsource", "automated", "day_lag",
+            "description", "holiday", "precision", "price_type", "ric", "rules"};
+    private final String pxvInsertTemplate =
+            "Insert into fixing.rate_reset_config(currency, freq, refsource, description, ric, precision, day_lag, holiday, rules, price_type, automated) values ('%s', '%s', '%s', '%s', '%s', %s, %s, '%s', '%s', '%s', %s);";
+    private final String[] pxvfxMappingHeader = new String[] {"curid1", "curid2", "refsource", "automated", "precision",
+            "ric", "price_type", "security_description", "rules"};
+    private final String pxvfxInsertTemplate =
+            "Insert into fixing.fx_rate_reset_config(curid1, curid2, refsource, automated, precision, price_type, ric, rules, security_description) values ('%s', '%s', '%s', %s, %s, '%s', '%s', '%s', '%s');";
+    public void GeneratePxvInserts() throws Exception {
+        try (FileWriter fw = new FileWriter("resource/inserts/pxvInserts.txt");
+                CSVParser parser = CSVParser.parse(new File("resource/pxvMapping.csv"), Charset.defaultCharset(),
+                        CSVFormat.DEFAULT.withHeader(pxvMappingHeader).withSkipHeaderRecord());) {
+            List<CSVRecord> records = parser.getRecords();
+            for (CSVRecord record : records) {
+                String str = String.format(pxvInsertTemplate, record.get("currency"), record.get("freq"),
+                        record.get("refsource").toUpperCase(), record.get("description"), record.get("ric"),
+                        record.get("precision"),
+                        record.get("day_lag").toLowerCase(), record.get("holiday"), record.get("rules"),
+                        record.get("price_type"), record.get("automated").toLowerCase());
+                fw.write(str);
+                fw.write("\n");
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+            throw e;
+        }
+    }
+
+    public void GeneratePxvfxInserts() throws Exception {
+        try (FileWriter fw = new FileWriter("resource/inserts/pxvfxInserts.txt");
+                CSVParser parser = CSVParser.parse(new File("resource/pxvfxMapping.csv"), Charset.defaultCharset(),
+                        CSVFormat.DEFAULT.withHeader(pxvfxMappingHeader).withSkipHeaderRecord());) {
+            List<CSVRecord> records = parser.getRecords();
+            for (CSVRecord record : records) {
+                String str = String.format(pxvfxInsertTemplate, record.get("curid1"), record.get("curid2"),
+                        record.get("refsource").toUpperCase(), record.get("automated").toLowerCase(),
+                        record.get("precision"),
+                        record.get("price_type"), record.get("ric"), record.get("rules"),
+                        record.get("security_description"));
+                fw.write(str);
+                fw.write("\n");
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+            throw e;
+        }
+    }
+}

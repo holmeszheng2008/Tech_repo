@@ -1,0 +1,27 @@
+Interact with container bash:
+
+1.check container in docker in a given server:
+
+# ssh dpmdeploy@lvappi00811.bns
+# ScotiaAgile2018
+# docker container ls
+	<container-name> or <container-id>
+# docker exec -it af.cds.bns:5002/dpm/marketdatahistoryrs:1.24.0-b19 bash
+# grep jpy k2refmap.csv
+->
+N/A,JPY3MFSR=,N/A,jpy,3-month,3-month,TELERATE3750
+N/A,JPY6MFSR=,N/A,jpy,6-month,JPYcurve,TELERATE3750
+N/A,JPY6MFSR=,N/A,jpy,6-month,6m,TELERATE3750
+
+
+2. restart container
+docker restart <container-id> or <container-name>
+
+3. start a container
+docker start <name>
+
+4. stop a container
+docker stop <name>
+
+5. copy files from a container
+docker cp <containerId>:/file/path/within/container /host/path/target

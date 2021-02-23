@@ -1,0 +1,90 @@
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lombok.extern.slf4j.Slf4j;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.security.KeyStore;
+
+import org.apache.http.impl.NoConnectionReuseStrategy;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.SSLContextBuilder;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLInitializationException;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.ByteArrayHttpMessageConverter;
+import org.springframework.http.converter.ResourceHttpMessageConverter;
+import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.http.converter.support.AllEncompassingFormHttpMessageConverter;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.converter.xml.SourceHttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
+
+@Slf4j
+@Configuration
+public class RestTemplateConfig {
+    private final ObjectMapper objectMapper;
+
+    public RestTemplateConfig(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public RestTemplate restTemplate(RestTemplateBuilder builder, ClientConfig clientConfig) {
+    	HttpClientBuilder httpClientbuilder = HttpClients.custom();
+        if (clientConfig.getTls() != null) {
+            try {
+                ClientConfig.TlsConfig tlsConfig = clientConfig.getTls();
+                SSLContextBuilder sslContextBuilder = new SSLContextBuilder().setProtocol(tlsConfig.getProtocol());
+                if (tlsConfig.getTrustStorePath() != null) {
+                    org.apache.http.ssl.TrustStrategy trustStrategy = null;
+                    if (tlsConfig.isTrustSelfSignedCertificates()) {
+                        trustStrategy = new TrustSelfSignedStrategy();
+                    }
+                    sslContextBuilder.loadTrustMaterial(
+                        loadKeyStore(tlsConfig.getTrustStoreType(), tlsConfig.getTrustStorePath(), tlsConfig.getTrustStorePassword()),
+                        trustStrategy
+                    );
+                }
+
+                SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(sslContextBuilder.build(),
+                    tlsConfig.isVerifyHostname() ? SSLConnectionSocketFactory.getDefaultHostnameVerifier() : new NoopHostnameVerifier());
+                httpClientbuilder.setSSLSocketFactory(csf);
+            } catch (Exception e) {
+                log.warn("Error setting ssl context.", e);
+            }
+        }
+        httpClientbuilder.setConnectionReuseStrategy(new NoConnectionReuseStrategy());
+
+        HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+        requestFactory.setReadTimeout(clientConfig.getReadTimeout());
+        requestFactory.setConnectTimeout(clientConfig.getConnectionTimeout());
+        requestFactory.setHttpClient(httpClientbuilder.build());
+
+        RestTemplate template = builder.messageConverters(new ByteArrayHttpMessageConverter(), new StringHttpMessageConverter(),
+                new ResourceHttpMessageConverter(false), new SourceHttpMessageConverter(), new AllEncompassingFormHttpMessageConverter(),
+                new MappingJackson2HttpMessageConverter(this.objectMapper)).build();
+        template.setRequestFactory(requestFactory);
+        return template;
+
+    }
+
+    private KeyStore loadKeyStore(String type, File path, String password) {
+        try (InputStream inputStream = new FileInputStream(path)) {
+            KeyStore keyStore = KeyStore.getInstance(type);
+            keyStore.load(inputStream, password.toCharArray());
+            return keyStore;
+        } catch (Exception e) {
+            throw new SSLInitializationException(e.getMessage(), e);
+        }
+    }
+}

@@ -1,0 +1,50 @@
+public File saveHistoricalToFile(String fixingId, String type, LocalDate startDate, LocalDate endDate)
+        throws IOException {
+    int persisted = 0;
+
+    File parentDir = new File(DIR);
+    if (!parentDir.exists()) {
+        parentDir.mkdirs();
+    }
+    
+    ImmutablePair<String, String> pair =
+            CassandraUtil.prepareCqlForHistoricalFixingQuery(fixingId, type, startDate, endDate);
+    String cql = pair.getLeft();
+    String fileName = DIR + "/" + pair.getRight();
+    File file = new File(fileName);
+
+    Statement stmt = new SimpleStatement(cql);
+    stmt.setFetchSize(2000);
+    Slice<FixingSeries> fsSlice = cassandraOperations.slice(stmt, FixingSeries.class);
+
+    try (FileWriter fw = new FileWriter(file);
+            CSVPrinter csvPrinter = new CSVPrinter(fw, CSVFormat.DEFAULT.withHeader(fixingSeriesHearder))) {
+
+        while (fsSlice.hasContent()) {
+            List<FixingSeries> fsList = fsSlice.getContent();
+            for (FixingSeries fs : fsList) {
+                csvPrinter.printRecord(fs.getKey().getFixingId(), fs.getKey().getObservedDate(),
+                        fs.getKey().getVersionTime(), fs.getEffectiveDate(), fs.getType(), fs.getValue(),
+                        fs.getVendor(), fs.getVendorId());
+                persisted += 1;
+            }
+            if (fsSlice.hasNext()) {
+                stmt.setPagingState(((CassandraPageRequest) fsSlice.nextPageable()).getPagingState());
+                fsSlice = cassandraOperations.slice(stmt, FixingSeries.class);
+            } else {
+                break;
+            }
+        }
+    } catch (IOException e) {
+        String errMsg = String.format("Error writing contents to file %s.", fileName);
+        log.error(errMsg);
+        throw e;
+    }
+
+    if (persisted == 0) {
+        file.delete();
+        return null;
+    }
+
+    return file;
+}

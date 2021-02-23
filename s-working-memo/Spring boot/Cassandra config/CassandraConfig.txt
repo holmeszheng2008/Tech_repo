@@ -1,0 +1,61 @@
+@Configuration
+@EnableCassandraRepositories
+public class CassandraConfig extends AbstractCassandraConfiguration {
+    @Autowired
+    private ObjectMapper om;
+
+    @Value("${cassandra.contactpoints}")
+    private String contactPoints;
+
+    @Value("${cassandra.port}")
+    private int port;
+
+    @Value("${cassandra.keyspace}")
+    private String keySpace;
+
+    @Value("${cassandra.username}")
+    private String username;
+
+    @Value("${cassandra.password}")
+    private String password;
+
+    @Override
+    protected String getKeyspaceName() {
+        return keySpace;
+    }
+
+    @Override
+    protected String getContactPoints() {
+        return contactPoints;
+    }
+
+    @Override
+    protected int getPort() {
+        return port;
+    }
+
+    @Override
+    public String[] getEntityBasePackages() {
+        return new String[] {"Path to package where cassandra entities are saved"};
+    }
+
+    @Override
+    protected AuthProvider getAuthProvider() {
+        return new PlainTextAuthProvider(username, getPassword());
+    }
+
+    private String getPassword() {
+        return PasswordUtil.decrypt(this.password);
+    }
+
+    @Override
+    public CassandraCustomConversions customConversions() {
+
+        List<Converter<?, ?>> converters = new ArrayList<>();
+
+        converters.add(new StubRateInfoReadConverter(om));
+        converters.add(new StubRateInfoWriteConverter(om));
+
+        return new CassandraCustomConversions(converters);
+    }
+}

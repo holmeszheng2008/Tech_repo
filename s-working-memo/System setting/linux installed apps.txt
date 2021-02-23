@@ -1,0 +1,33 @@
+Eclipse:
+	lombok plugin
+		Direct/ manual
+	proxy
+	plugins:
+		Eclipse XML Editoer and Tools 3.14
+		PyDev - Python IDE for Eclipse 7.4.0
+			Python Interpreter -> /usr/bin/python3.6
+		Spring Tools 4 - for Spring Boot (aka Spring Tool Suite 4) 4.4.2 RELEASE
+
+maven
+
+DB visulizer
+datastax devcenter
+	https://downloads.datastax.com/#devcenter
+
+kubectl:
+	https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-kubectl-on-linux
+
+Redis Desktop Manager
+
+cassandra
+
+Postman
+
+airflow
+
+sublime
+
+snap apps -> /snap/bin
+
+# cassandra dev center
+https://downloads.datastax.com/#devcenter

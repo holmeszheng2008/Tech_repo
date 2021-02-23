@@ -1,0 +1,19 @@
+In Linux or macOS, you can execute the below commands.
+
+Bash 
+
+# Enable the go modules feature
+export GO111MODULE=on
+# Set the GOPROXY environment variable
+export GOPROXY=https://goproxy.io
+Or, write it into the .bashrc or .bash_profile file.
+
+In Windows, you can execute the below commands.
+
+PowerShell 
+# Enable the go modules feature
+$env:GO111MODULE="on"
+# Set the GOPROXY environment variable
+$env:GOPROXY="https://goproxy.io"
+
+go env

@@ -1,0 +1,56 @@
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.Claim;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import java.util.Collection;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+/**
+ * Convert Jwt token to corresponding authentication token
+ * Token being passed should already been trimmed (token portion only. no Bearer or what not)
+ */
+public class JwtTokenConverter {
+    private JwtTokenConverter() {}
+
+    public static DpmAuthToken convert(String token, String authorizationHeader, byte[] secret) {
+        DecodedJWT jwt = JWT.require(Algorithm.HMAC512(secret))
+                .build()
+                .verify(token);
+        return constructPrincipal(jwt, authorizationHeader);
+    }
+
+    public static DpmAuthToken convert(String token, String authorizationHeader, String secret) {
+        DecodedJWT jwt = JWT.require(Algorithm.HMAC512(secret))
+                .build()
+                .verify(token);
+        return constructPrincipal(jwt, authorizationHeader);
+    }
+
+    private static DpmAuthToken constructPrincipal(DecodedJWT jwt, String authorizationHeader) {
+        String user = jwt.getSubject();
+        if (user == null) {
+            return null;
+        }
+
+        Stream<String> roleStream = extractClaimStream(jwt, "roles");
+        Stream<String> pxvRolesStream = extractClaimStream(jwt, "pxv_roles");
+        Collection<SimpleGrantedAuthority> roles = Stream.concat(roleStream, pxvRolesStream)
+                                                         .filter(StringUtils::isNotBlank)
+                                                         .map(SimpleGrantedAuthority::new)
+                                                         .collect(Collectors.toList());
+
+        return new DpmAuthToken(user, jwt.getClaim("k2uid").asString(), roles, authorizationHeader);
+    }
+
+    private static Stream<String> extractClaimStream(DecodedJWT jwt, String claimKey) {
+        return Optional.ofNullable(jwt.getClaim(claimKey))
+                .map(Claim::asString)
+                .map(r -> Stream.of(r.split(",")))
+                .orElse(Stream.empty());
+    }
+}

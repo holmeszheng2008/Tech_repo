@@ -1,0 +1,17 @@
+@Configuration
+@ConfigurationProperties(prefix = "system")
+@Slf4j
+@Setter
+@Getter
+public class SystemConfig {
+    private Map<String, String> environment;
+
+    @PostConstruct
+    public void setup() {
+        log.info("setting up system properties");
+        environment.forEach((key, value) -> {
+            System.setProperty(key, value);
+            log.info("key: " + key + "; value: " + value);
+        });
+    }
+}

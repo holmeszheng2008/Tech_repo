@@ -1,0 +1,26 @@
+@Slf4j
+@Component
+public class RedisUtil {
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
+
+    public Boolean exists(String key) {
+        return redisTemplate.hasKey(key);
+    }
+
+    public Set<String> keys(String pattern) {
+        ScanOptions options = ScanOptions.scanOptions().match(pattern).count(1000).build();
+        return redisTemplate.execute((RedisCallback<Set<String>>) redisConnection -> {
+            Set<String> keys = new HashSet<>();
+            try {
+                Cursor<byte[]> cursor = redisConnection.scan(options);
+                while (cursor.hasNext()) {
+                    keys.add(new String(cursor.next()));
+                }
+            } catch (Exception exception) {
+                log.error("Error fetching data from redis.", exception);
+            }
+            return keys;
+        });
+    }
+}

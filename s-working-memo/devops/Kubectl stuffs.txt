@@ -1,0 +1,19 @@
+# show pods history
+kubectl get event -o custom-columns=NAME:.metadata.name | cut -d "." -f1
+
+# show logs
+kubectl logs -f <pod-name>
+
+# delete pod
+kubectl delete -n dev pod <pod-name> --force
+
+# check container in pod in kubernetes cluster:
+
+kubectl exec -n dev mdsync-69f6b6fbb5-xvmzg -it bash
+kubectl exec -n dev <pod-name> -it bash
+
+# check logs in a pod
+kubectl logs -n dev -f <pod-name>
+
+# show docker used in pod
+kubectl -n dev describe pod pod_name

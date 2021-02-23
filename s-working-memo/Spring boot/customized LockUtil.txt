@@ -1,0 +1,87 @@
+@Component
+public class LockUtil {
+    private Map<String, LockInfo> lockMap = new HashMap<>();
+    private Lock changeLock = new ReentrantLock();
+    private Lock irAutomationLock = new ReentrantLock();
+    private Lock fxAutomationLock = new ReentrantLock();
+
+    @Getter
+    @Setter
+    @Builder
+    public static class LockInfo {
+        private Lock lock;
+        private int sharedCount;
+
+    }
+    public void lockIrAutomation() {
+        irAutomationLock.lock();
+    }
+
+    public void unlockIrAutomation() {
+        irAutomationLock.unlock();
+    }
+
+    public boolean tryLockIrAutomation() {
+        return irAutomationLock.tryLock();
+    }
+
+    public void lockFxAutomation() {
+        fxAutomationLock.lock();
+    }
+
+    public void unlockFxAutomation() {
+        fxAutomationLock.unlock();
+    }
+
+    public boolean tryLockFxAutomation() {
+        return fxAutomationLock.tryLock();
+    }
+
+    public void lockIndex(String index) {
+        changeLock.lock();
+
+        LockInfo lockInfo = lockMap.get(index);
+        if (lockInfo == null) {
+            lockInfo = LockInfo.builder().lock(new ReentrantLock()).sharedCount(1).build();
+            lockMap.put(index, lockInfo);
+        } else {
+            lockInfo.setSharedCount(lockInfo.getSharedCount() + 1);
+        }
+
+        changeLock.unlock();
+        lockInfo.getLock().lock();
+    }
+
+    public boolean tryLockIndex(String index) {
+        changeLock.lock();
+
+        LockInfo lockInfo = lockMap.get(index);
+        if (lockInfo == null) {
+            lockInfo = LockInfo.builder().lock(new ReentrantLock()).sharedCount(1).build();
+            lockMap.put(index, lockInfo);
+            lockInfo.getLock().lock();
+
+            changeLock.unlock();
+            return true;
+        } else {
+            changeLock.unlock();
+            return false;
+        }
+    }
+
+    public void unlockIndex(String index) {
+        changeLock.lock();
+        LockInfo lockInfo = lockMap.get(index);
+        if (lockInfo != null) {
+            lockInfo.getLock().unlock();
+            int newSharedCount = lockInfo.getSharedCount() - 1;
+            if (newSharedCount == 0) {
+                lockMap.remove(index);
+            } else {
+                lockInfo.setSharedCount(newSharedCount);
+            }
+        }
+
+        changeLock.unlock();
+    }
+}

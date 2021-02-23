@@ -1,0 +1,14 @@
+google-chrome --proxy-server="http://proxyprd.scotia-capital.com:8080/" --proxy-server="https://proxyprd.scotia-capital.com:8080/"
+
+google-chrome --proxy-server="https://proxyprd.scotia-capital.com:8080/"
+
+
+google-chrome --http-proxy=https://proxyprd.scotia-capital.com:8080/ --https-proxy=https://proxyprd.scotia-capital.com:8080/
+
+
+ --proxy-server="https=proxy1:80;http=socks4://baz:1080"
+ 
+ 
+google-chrome --proxy-server="https=http://proxyprd.scotia-capital.com:8080/;http=http://proxyprd.scotia-capital.com:8080/"
+
+chrome://net-internals/#proxy

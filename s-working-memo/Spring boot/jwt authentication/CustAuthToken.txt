@@ -1,0 +1,53 @@
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.access.AccessDeniedException;
+
+import java.util.Collection;
+import java.util.Objects;
+
+public class CustAuthToken extends UsernamePasswordAuthenticationToken {
+    private final String k2uid;
+    private final String authorizationHeader;
+
+    public CustAuthToken(String ldapId, String k2uid, Collection<? extends GrantedAuthority> authorities, String authorizationHeader) {
+        super(ldapId, null, authorities);
+        this.k2uid = k2uid;
+        this.authorizationHeader = authorizationHeader;
+    }
+
+    public String getK2uid() {
+        return k2uid;
+    }
+
+    public String getAuthorizationHeader() {
+        return authorizationHeader;
+    }
+
+    public static CustAuthToken getCustAuthToken(){
+        Authentication CustAuthToken = SecurityContextHolder.getContext().getAuthentication();
+        if ( CustAuthToken == null )
+            throw new AccessDeniedException("JwtToken is null");
+
+        return (CustAuthToken)CustAuthToken;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+
+        CustAuthToken other = (CustAuthToken) obj;
+        return Objects.equals(getName(), other.getName()) && Objects.equals(getAuthorities(), other.getAuthorities()) &&
+                Objects.equals(getK2uid(), other.getK2uid()) && Objects.equals(getCredentials(), other.getCredentials()) &&
+                Objects.equals(getDetails(), other.getDetails()) && Objects.equals(getPrincipal(), other.getPrincipal()) &&
+                isAuthenticated() == other.isAuthenticated();
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode() + 89 * Objects.hash(k2uid);
+    }
+}

@@ -1,0 +1,11 @@
+Windows: C:\Windows\System32\drivers\etc\hosts
+linux: /etc/hosts
+
+# MD-DEV
+172.26.125.230  dev.mdcluster.bns
+172.26.121.197  dev.mdcluster.bns
+172.26.125.229  dev.mdcluster.bns
+
+172.26.141.1 dev-pxvcluster-lb-apiserver.kubernetes.local
+172.26.141.3 qa-pxvcluster-lb-apiserver.kubernetes.local
+172.25.138.102 uat-pxvcluster-lb-apiserver.kubernetes.local

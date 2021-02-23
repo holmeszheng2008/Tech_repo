@@ -1,0 +1,35 @@
+@Getter
+@Setter
+@Configuration
+@ConfigurationProperties("client")
+public class ClientConfig {
+    private TlsConfig tls;
+    private int connectionTimeout = 300000;
+    private int readTimeout = 1800000;
+
+    @Getter
+    @Setter
+    public static class TlsConfig {
+
+        private String protocol = "TLSv1.2";
+        private File keyStorePath;
+        private String keyStorePassword;
+        private String keyStoreType = "JKS";
+        private File trustStorePath;
+        private String trustStorePassword;
+        private String trustStoreType = "JKS";
+        private boolean trustSelfSignedCertificates = false;
+        private boolean verifyHostname = true;
+        private List<String> supportedProtocols = null;
+        private List<String> supportedCiphers = null;
+        private String certAlias = null;
+
+        public String getTrustStorePassword() {
+            return PasswordUtil.decrypt(this.trustStorePassword);
+        }
+
+        public String getKeyStorePassword() {
+            return PasswordUtil.decrypt(this.keyStorePassword);
+        }
+    }
+}
