@@ -1,0 +1,6 @@
+@Service 
+public interface MyService { 
+  @Retryable( value = SQLException.class, maxAttemptsExpression = "${retry.maxAttempts}",
+            backoff = @Backoff(delayExpression = "${retry.maxDelay}")) 
+  void retryServiceWithExternalizedConfiguration(String sql) throws SQLException; 
+}

@@ -1,7 +1,18 @@
 # base.properties
-endpoints.jmx.enabled=false
-management.endpoints.jmx.exposure.exclude=*
-management.endpoint.health.show-details=always
+// management.endpoints.web.exposure.include=*
+//endpoints.jmx.enabled=false
+//management.endpoints.jmx.exposure.exclude=*
+//management.endpoint.health.show-details=always
+
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      base-path: /manage
+      exposure:
+        include: "*"
 
 # base.yaml
 app:

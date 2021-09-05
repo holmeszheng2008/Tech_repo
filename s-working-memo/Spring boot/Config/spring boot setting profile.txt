@@ -1,0 +1,23 @@
+java -Dspring.profiles.active=staging -Dspring.config.location=C:\Config your-spring-boot-app.jar
+OR
+java your-spring-boot.jar --spring.profiles.active=staging --spring.config.location=C:\Config
+
+
+# Found one issue, application.yml won't be recognized when using maven in eclipse, use application.yaml instead. No matter what profile you choose, application.yaml is always used as base.
+
+# Inheritance order:
+
+For example, if this was my log output:
+2017-05-23 23:14:32 INFO  e.r.t.MyApplication - The following profiles are active: cloud, dev, special
+
+then ALL of these properties files would be loaded (Note, you can interchange .properties and .yml):
+
+application.yml
+
+application-cloud.yml
+
+application-dev.yml
+
+application-special.yml
+
+FURTHERMORE, remember that Spring Boot allows property overriding in the order the properties files are read, so the last loaded property file wins. In this case, if I declared a property, call it my.property in all 4 of those above properties files, only the value in application-special.yml would be loaded since it was the last applied profile.
