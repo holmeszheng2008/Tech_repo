@@ -1,14 +1,10 @@
-Divide & conquer: recursion + 无重复子问题
-回溯: result enumeration (brute force)
-greedy: 局部最优即全局最优
-
 DP: recursion + 重复子问题
 // Bottom-up dp problems sovling procedures
 // 1. base cases.
 // 2. transition funciton + condition + direction 
 transition function to derive from base cases, moving from bottom-up. Direction shall be noticed. (condition may affect direction for edge spots)
 // 3. tabulation.
-tabulation by iteration from base cases through direction and fufill the matrix.
+tabulation by iteration from base cases through direction and fufill the matrix. Need to fill all the matrix to get result.
 
 // Top-down dp problems sovling procedures
 // 1. base cases
@@ -16,3 +12,4 @@ tabulation by iteration from base cases through direction and fufill the matrix.
 transition function to derive from base cases, moving from bottom-up. Direction shall be noticed. (condition may affect direction for edge spots)
 // 3. memoization
 memoization (if not set, the object value is null). Written as recursion + memoization.
+Know exactly where the result is in the matrix, then top down.

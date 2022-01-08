@@ -1,0 +1,30 @@
+package com.ericStudio;
+
+public class StreamTest {
+	public static void main(String[] args) {
+		GenericTest<Integer> a = new GenericTest<Integer>();
+		
+		// Raw type GenericTest on the left is the same as GenericTest<?>, on the right is the same as GenericTest<?>.
+				But you can instantiate a raw GenericTest not a GenericTest<?>.
+		// Conversion from GenericTest<?> to GenericTest<String> should be explicit, implicit the other direction.
+		// Conversion from Raw type GenericTest to GenericTest<String> could be implicit.
+		// GenericTest<Object> can't be cast to GenericTest<String>, vice versa, implicit or explicit.
+		
+		
+		GenericTest<?> b1 = a;
+		GenericTest<String> c1 = (GenericTest<String>) b1;
+		
+		GenericTest b2 = a;
+		GenericTest<String> c2 = b2;
+	}
+}
+
+class GenericTest<T> {
+	
+}
+
+
+// GenericTest<String> can be cast to GenericTest<String> implicitly, this is polymorphism
+class GenericSub<T> extends GenericTest<T> {
+
+}

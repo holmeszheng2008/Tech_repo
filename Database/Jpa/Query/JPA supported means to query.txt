@@ -1,0 +1,343 @@
+Definition of NamedQuery, NamedNativeQuery, NamedProcedure
+(1) @NamedQuery (JPQL)
+	eg:
+	@NamedQuery(name = "test-named", query = "select v from VersionTest v")
+		entityManager.createNamedQuery("test-named", VersionTest.class) -> List<VersionTest> (only entity class)
+		entityManager.createNamedQuery("test-named") -> List<VersionTest> (only entity class)
+
+	@NamedQuery(name = "test-named", query = "select v.id, v.name from VersionTest v")
+		entityManager.createNamedQuery("test-named", VersionTest.class) -> error
+		entityManager.createNamedQuery("test-named") -> List<Object[]>
+	
+(2) @NamedNativeQuery (Native SQL)
+	eg:
+	@NamedNativeQuery(name = "test-named", query = "select * from world.version_test", resultClass = VersionTest.class) (resultClass must be specified)
+		entityManager.createNamedQuery("test-named", VersionTest.class) -> List<VersionTest> (only entity class)
+		entityManager.createNamedQuery("test-named") -> List<VersionTest> (only entity class)
+		entityManager.createNamedQuery("test-named, VersionTestDao.class) -> Error: specified for TypedQuery [com.studio.eric.entity.VersionTestDto] is incompatible with query return type [class com.studio.eric.entity.VersionTest]
+ 
+	@NamedNativeQuery(name = "test-named", query = "select id, name from world.version_test", resultClass = VersionTest.class)
+		entityManager.createNamedQuery("test-named", VersionTest.class) -> error: column 'time' not found
+		entityManager.createNamedQuery("test-named") -> error: column 'time' not found
+
+	@NamedNativeQuery(name = "test-named", query = "select id, name from world.version_test", resultClass = VersionTestDto.class) -> Error: since VersionTestDto is not an entity class, just a pojo
+	
+	@NamedNativeQuery(name = "test-named", query = "select id, name from world.version_test")
+		entityManager.createNamedQuery("test-named") -> List<Object[]>
+		entityManager.createNamedQuery("test-named", Tuple.class) -> List<Tuple>
+
+
+
+Two ways to trigger query (or DML):
+1.	Through Jpa EntityManger or Hibernate Session.
+	(1) jpql
+		entityManager.createQuery("select v from VersionTest v", VersionTest.class).getResultList(); -> List<VersionTest> (must be entity class)
+		entityManager.createQuery("select v from VersionTest v").getResultList(); -> List<VersionTest> (must be entity class)
+		entityManager.createQuery("select v.id, v.name from VersionTest v").getResultList(); -> List<Object[]>
+		entityManager.createQuery("select v.id, v.name from VersionTest v", VersionTest.class).getResultList(); -> error
+	
+	(2) sql
+		entityManager.createNativeQuery("select * from world.version_test").getResultList(); -> List<Object[]>
+		entityManager.createNativeQuery("select * from world.version_test", VersionTest.class).getResultList(); -> List<VersionTest> (must be entity class)
+		entityManager.createNativeQuery("select * from world.version_test", VersionTestDto.class).getResultList(); -> error: unknown entity
+		entityManager.createNativeQuery("select id, name from world.version_test", VersionTest.class).getResultList(); -> error: column 'time' not found
+		
+		tbd: pojo testing to resultSetMapping
+		
+	(3) CriteriaQuery -> the result class must be entity class
+		entityManager.createQuery(cq)
+		
+
+	##### Notes #####
+	entityManager.createNativeQuery("select * from world.version_test").setLockMode(LockModeType.PESSIMISTIC_READ).getResultList(); -> Error: Illegal attempt to set lock mode on a native SQL query
+
+2. 	name derived repository methods. (functionality contrained)
+
+
+2. 	customized @Query on methods in Jpa repository
+	(1) JPQL
+	@Query(value = "SELECT o.id, o.name FROM VersionTest o")
+	List<VersionTest> myfindById(Integer id);	-> error: convert from Object[] to VersionTest
+	@Query(value = "SELECT o.id, o.name FROM VersionTest o")
+	List myfindById(Integer id); -> List<Object[]>
+	@Query(value = "SELECT o FROM VersionTest o")
+	List<VersionTest> myfindById(Integer id); -> OK
+	
+	(2) Native SQL
+	@Query(value = "select id, name from world.version_test", nativeQuery = true)
+    List<VersionTest> myFindByIdNative(Integer id); -> error: Column 'time' not found.
+	@Query(value = "select id, name from world.version_test", nativeQuery = true)
+    List myFindByIdNative(Integer id); -> List<Object[]>
+	@Query(value = "select *, 'hello' as e from world.version_test", nativeQuery = true)
+    List<VersionTest> myFindByIdNative(Integer id); -> OK
+	@Query(value = "select id, name, version, time from world.version_test", nativeQuery = true)
+    List<VersionTest> myFindByIdNative(Integer id); -> OK
+
+	##### Notes #####
+	(1) Named Queries can also be called through @Query methods in the repository:
+		Reference to the already defined namedQuery as
+			@Query(name = 'test-named'), if found, go with that namedQuery definition
+	(2) To bind method parameters to (parameter names in sql), use @Param
+		@Query(value = "select * from world.version_test where id = :id)
+		public List<VersionTest> getTest(@Param("id") Integer id)
+			otherwise only order will be considered as
+		@Query(value = "select * from world.version_test where id = ?1)
+		public List<VersionTest> getTest(Integer id)
+	(3) @Lock doesn't work with native queries.
+			Lock could be directly given through SQL string.
+			Or after entity is feched and managed in persistence context, set lock manually using entityManager.lock(Object entity, LockModeType lockMode);
+			Or Use JPQL query
+		@Lock(LockModeType.PESSIMISTIC_READ)
+		@Query(value = "select * from world.version_test where id = ?1) -> Error: Illegal attempt to set lock mode on a native SQL query
+
+		@Lock(LockModeType.PESSIMISTIC_READ)
+		@Query(value = "select v from VersionTest v")	-> work
+
+		@Query(value = "select * from VersionTest for update")	-> work
+
+	(4) If DML or DDL, combine @Query with @Modifying
+
+
+
+
+
+##### To POJO #####
+https://vladmihalcea.com/the-best-way-to-map-a-projection-query-to-a-dto-with-jpa-and-hibernate/
+1. Interface based projection
+	@Query(value = "select 'abc' as astring from world.version_test", nativeQuery = true)
+    List<TestDto> myFindByIdNative(Integer id);
+
+	interface TestDto {
+        String getAstring(); (name of getters correspond to sql fields)
+    }
+	
+	Result Object is a proxy that implements TestDto interface.
+
+2. @SetResultMapping for @NamedNativeQuery
+@NamedNativeQuery(
+    name = "PostDTO",
+    query = """
+        SELECT
+           p.id AS id,
+           p.title AS title
+        FROM Post p
+        WHERE p.created_on > :fromTimestamp
+        """,
+    resultSetMapping = "PostDTO"
+)
+@SqlResultSetMapping(
+    name = "PostDTO",
+    classes = @ConstructorResult(
+        targetClass = PostDTO.class,
+        columns = {
+            @ColumnResult(name = "id"),
+            @ColumnResult(name = "title")
+        }
+    )
+)
+
+3. JPQL Constructor Expression
+	List<PostDTO> postDTOs = entityManager.createQuery("""
+    select new com.vladmihalcea.book.hpjp.hibernate.forum.dto.PostDTO(
+       p.id,
+       p.title
+    )
+    from Post p
+    where p.createdOn > :fromTimestamp
+    """, PostDTO.class)
+
+4. Repository method or entity.crate*Query().getResultList return List which will be List<Object[]> or List<Tuple>
+
+	Looks like List<tuple> is better than List<Object[]>
+	List<Tuple> postDTOs = entityManager.createQuery("""
+		select
+		   p.id as id,
+		   p.title as title
+		from Post p
+		where p.createdOn > :fromTimestamp
+		""", Tuple.class)
+	.setParameter(
+		"fromTimestamp",
+		Timestamp.from(
+			LocalDate.of(2020, 1, 1)
+				.atStartOfDay()
+				.toInstant(ZoneOffset.UTC)
+		)
+	)
+	.getResultList();
+
+5. ResultTransformer and JPQL 
+	or ResultTransformer and Native Sql
+	List<PostDTO> postDTOs = entityManager.createNativeQuery("""
+		select
+		   p.id as "id",
+		   p.title as "title"
+		from Post p
+		where p.created_on > :fromTimestamp
+		""")
+	.setParameter(
+		"fromTimestamp",
+		Timestamp.from(
+			LocalDateTime.of(2020, 1, 1, 0, 0, 0)
+				.toInstant(ZoneOffset.UTC)
+		)
+	)
+	.unwrap(org.hibernate.query.NativeQuery.class)
+	.setResultTransformer(Transformers.aliasToBean(PostDTO.class))
+	.getResultList();
+
+
+##### Select for nested objects & Solution for association N+1 Issue (If association is needed for each individual object)
+		Fetch.EAGER will result in N+1 Issue
+1.	NamedEntityGraph on entity
+	EntityGraph on repository
+	https://medium.com/geekculture/jpa-entitygraphs-a-solution-to-n-1-query-problem-e29c28abe5fb
+
+2. Native query. select with inner join, left (outer) join, right (outer) join, full outer join
+	List<Tuple> comments = entityManager.createNativeQuery("""
+		SELECT
+			pc.id AS id,
+			pc.review AS review,
+			p.title AS postTitle
+		FROM post_comment pc
+		JOIN post p ON pc.post_id = p.id
+		""", Tuple.class)
+	.getResultList();
+	Problem: All needed info are returned in one row but in the form of Tuple, so you will need to do all the work to convert to Objects on manually.
+
+3. JPQL query. Select with join fetch, left join fetch, right join fetch, full join fetch
+	Example:
+	List<PostComment> comments = entityManager.createQuery("""
+		select pc
+		from PostComment pc
+		join fetch pc.post p
+		""", PostComment.class)
+	PostComment is an entity class with reference to entity class Post, This is automatic and also managed by persistence context.
+
+######## Note #########
+If association is only needed for a certain number of root objects, then just do lazy fetch on those
+
+
+##### Pagination and ordering #######
+(1) in Repository methods, under @Query, return Slice or Page and pass Pageable or Order as parameter
+(2)
+	List<Post> posts = entityManager
+		.createQuery(
+			"select p " +
+			"from Post p " +
+			"order by p.createdOn ")
+		.setFirstResult(10)
+		.setMaxResults(10)
+		.getResultList();
+
+(3) JpaSpecificationExecutor (A repository way to use entityManager.createQuery(Criteria)
+	A workaround to specify countQuery:
+@Override
+    public List<Car> carList(Integer limit, Boolean ascending, Color color) {
+        Specification<Car> spec = fetchMake().and(fetchModel());
+        Pageable pageRequest = null;
+        if (color == null) {
+            pageRequest = PageRequest.of(0, limit, ascending ? Sort.by("color").ascending() : Sort.by("color").descending());
+        } else {
+            spec = spec.and(byColor(color));
+            pageRequest = PageRequest.of(0, limit);
+        }
+
+        Page<Car> s = carRepository.findAll(spec, pageRequest);
+        return s.getContent();
+    }
+
+    private Specification<Car> fetchMake() {
+        return (Specification<Car>) (root, query, builder) -> {
+            Join<Car, Make> join = null;
+            if (query.getResultType() == Long.class) {							-> workaround to generate countQuery
+                join = root.join("make", JoinType.INNER);
+            } else {
+                Fetch<Car, Make> f = root.fetch("make", JoinType.INNER);
+                join = (Join<Car, Make>) f;
+            }
+
+            return join.getOn();
+        };
+    }
+
+    private Specification<Car> fetchModel() {
+        return (Specification<Car>) (root, query, builder) -> {
+            Join<Car, Model> join = null;
+            if (query.getResultType() == Long.class) {
+                join = root.join("model", JoinType.INNER);
+            } else {
+                Fetch<Car, Model> f = root.fetch("model", JoinType.INNER);
+                join = (Join<Car, Model>) f;
+            }
+
+            return join.getOn();
+        };
+    }
+### batch update, insert and delete ###
+Insert and update:
+https://vladmihalcea.com/how-to-batch-insert-and-update-statements-with-hibernate/
+
+properties.put("hibernate.jdbc.batch_size", "recommend 5 to 30");
+properties.put("hibernate.order_inserts", "true");
+properties.put("hibernate.order_updates", "true");
+properties.put("hibernate.jdbc.batch_versioned_data", "true");
+
+If our entities use GenerationType.IDENTITY identifier generator, Hibernate will silently disable batch inserts/updates.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+###### to clean up
+
+
+1. jpql -> Entity class or Object[] (if mapped to entity class, then returned results managed by persistence context)
+	(1) entityManager.createQuery("select v.id, v.name from VersionTest v where v.id = 1").getResultList();
+		list of Object[]
+		same as:
+		    @Query(value = "SELECT o.id, o.name FROM VersionTest o WHERE o.id = ?1")
+			Optional<VersionTest> myfindById(Integer id);
+		and you will get exception to convert from Object[] to VersionTest
+	(2) entityManager.createQuery("select v from VersionTest v where v.id = 1").getResultList();
+		list of VersionTest
+		This is automatically projected to only Entity class (annotated with @Entity)
+		And returned entities are managed in persistence context.
+		same as:
+		    @Query(value = "SELECT o FROM VersionTest o WHERE o.id = ?1")
+			Optional<VersionTest> myfindById(Integer id);
+			
+2. native sql -> Entity class or POJO or Object[] (if mapped to entity class, then returned results managed by persistence context)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})

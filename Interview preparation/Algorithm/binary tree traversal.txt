@@ -1,0 +1,76 @@
+class Node {
+	int val;
+	Node left;
+	Node right;
+}
+
+(1) Tree DFS
+a. Recursion
+NLNRN
+Pre-order: NLR
+	usage: tree creation, polish notation
+In-order: LNR
+	usage: BST non-descending order traversal
+Post-order: LRN
+	usage: tree delete, reverse-polish notation
+
+Node treeCopy(Node root){
+	if (root == null) return null;
+	Node node = new Node();
+
+	node.val = root.val;
+	node.left = treeCopy(root.left)
+	node.right = treeCopy(root.right)
+
+	return node;
+}
+
+void treeDelete (Node root){
+	if (root == null) return;
+	treeDelete(root.left);
+	root.left = null;
+	treeDelete(root.right);
+	root.right = null;
+}
+	plus:
+root = null;
+
+private void traverse(TreeNode root, int depth) {
+	if (root == null) {
+		res = Math.max(res, depth);
+		return;
+	}
+	depth++;
+	traverse(root.left, depth);
+	traverse(root.right, depth);
+	depth--;
+}
+
+b. Stack
+
+
+
+(2) Tree BFS
+	Queue
+    void levelTraverse(TreeNode root) {
+        if (root == null)
+            return 0;
+        Queue<TreeNode> q = new LinkedList<>();
+        q.offer(root);
+        int depth = 1;
+
+        while (!q.isEmpty()) {
+            int sz = q.size();
+
+            for (int i = 0; i < sz; i++) {
+                TreeNode cur = q.poll();
+                if (cur.left != null) {
+                    q.offer(cur.left);
+                }
+                if (cur.right != null) {
+                    q.offer(cur.right);
+                }
+            }
+            depth++;
+        }
+    }

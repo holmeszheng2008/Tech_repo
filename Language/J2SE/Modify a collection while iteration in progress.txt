@@ -1,0 +1,26 @@
+The only safe way to modify a collection while iteration in progress is through the collection iterator, either iterator or ListIterator.
+Using the set, add, remove function
+
+
+
+    public static void main(String[] args) {
+        // TODO Auto-generated method stub
+        List<Integer> list = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5));
+        for (ListIterator<Integer> li = list.listIterator(); li.hasNext();) {
+            Integer value = li.next();
+            if (value == 3) {
+                li.add(10);
+                System.out.println(li.previousIndex()); -> 2
+            }
+        }
+
+        list.forEach(System.out::println);
+    }
+
+1
+2
+10
+3
+4
+6
+7

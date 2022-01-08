@@ -1,7 +1,7 @@
 All recursions have following steps:
 (1) base cases
-(2) transition functions
-
+(2) transition functions (对于递归算法，最重要的就是明确递归函数的定义)
+	递归的思想相对迭代思想，稍微有点难以理解，处理的技巧是：不要跳进递归，而是利用明确的定义来实现算法逻辑。
 
 Difference on details deriving from algorithms
 (1) divide and conquer
@@ -14,29 +14,37 @@ b. transition function. condition, direction. will influence direction from bord
 c. tabulation (populate matrix from base cases) / memoization (null if answer of sub-problem not memoized yet)
 
 
-(3) Tree structure algorithm
-a. general
+(3) Tree structure algorithm (Traverse, divide and conqure)
+a. traverse
 	Depending if the base solution is on the leaves or not: Breath first search, Depth first search
 
 	Depth first search:
-	i. recursion, always think and achieve in this way first.
-		general workflow:		NLNRN
-			at the place of leaves, check it (N), check left and return something(L), do something (N), check right and return something(R), do something like set(N)
-			preorder: NLR
-			inorder: LNR
-			postorder: LRN
-	ii. Non recursion, to transfrom from the corresponding recursive solution.
-		general workflow:		use stack to push and pop nodes. If use non-recursion to achieve NLNRN, it's gonna to so hard.
-					
-			preorder:		when a node is popped, do something on it and push its right, push its left.
-			inorder:		when a node is popped the first time, if its left and right are both null or its mark is 2, do something, else push its right, push itself and mark push times to 2 and push left.
-			postorder:	when a node is popped the first time, if its left and right are both null or its mark is 2, do something, else push itslef and mark push time to 2, push its right, push its left.
+		i. recursion, always think and achieve in this way first.
+			general workflow:		NLNRN
+				at the place of leaves, check it (N), check left and return something(L), do something (N), check right and return something(R), do something like set(N)
+				preorder: NLR
+				inorder: LNR
+				postorder: LRN
+		ii. Stack
+			Iterative, to transfrom from the corresponding recursive solution.
+			general workflow:		use stack to push and pop nodes. If use non-recursion to achieve NLNRN, it's gonna to so hard.
+
+				preorder:		when a node is popped, do something on it and push its right, push its left.
+				inorder:		when a node is popped the first time, if its left and right are both null or its mark is 2, do something, else push its right, push itself and mark push times to 2 and push left.
+				postorder:	when a node is popped the first time, if its left and right are both null or its mark is 2, do something, else push itslef and mark push time to 2, push its right, push its left.
+	Breath first search:
+		Queue
+
+b. divide and conquer
+	eg: height of a tree
 
 Since connection among nodes will be re-constructed, usually root is returned in recursive functions.
-			
-	
-	
 
-b. backtracking
-	since solutions can only be got at the place of leaves, use the DFS solution from above, NLNRN
-		In the recursive function, result array passed as parameter, filled at leaves.
+
+(4) Backtracking
+Enumerate (Traverse) over all valid nodes, result is got when reaching a leaf node.
+
+transition function:
+	prefix path and choice list and (result) are passed in the transition function.
+when recursively called, go one level deeper.
+if multiple choices in one level, apply choice before going deeper and revert that choice after getting back

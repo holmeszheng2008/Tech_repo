@@ -1,0 +1,49 @@
+spring:
+  cache:
+    jcache:
+      config: classpath:ehcache.xml
+  datasource:
+    url: jdbc:mysql://localhost:3306/sakila?useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: monkey111
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+      naming.physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL5Dialect
+        javax.cache:
+          provider: org.ehcache.jsr107.EhcacheCachingProvider
+          uri: classpath:ehcache-jpa.xml
+        cache:
+          use_second_level_cache: true
+          use_query_cache: true
+          region:
+            factory_class: org.hibernate.cache.jcache.JCacheRegionFactory
+logging.level.org.hibernate.type.descriptor.sql: trace
+
+
+
+pom.xml:
+		// For Srping cache
+		<groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.ehcache</groupId>
+          <artifactId>ehcache</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>javax.cache</groupId>
+          <artifactId>cache-api</artifactId>
+        </dependency>
+        
+		// For echache hibernate second level cache
+		<dependency>
+          <groupId>org.hibernate</groupId>
+          <artifactId>hibernate-jcache</artifactId>
+        </dependency>

@@ -1,0 +1,52 @@
+Map Associations with JPA and Hibernate
+https://thorben-janssen.com/ultimate-guide-association-mappings-jpa-hibernate/
+
+Owning side in a relationship is the side that doesn't have "mappedBy", so it owns JoinColumn explicitly or implicitly, (Only one-to-many unidirectional is an exception, in the table, the foreign key has to be on the "many" side, but joinColumn is defined on the "one" side)
+	reference side is the side that has "mappedBy"
+Parent side in a relationsihp is the side that contains "cascadeType" and / or "orphanRemoval"
+
+When Owning side removes a link (many to many, many to one, one to one), the link in the database table is deleted (many to one, one to one join column is set to null, many to many delete the row in the intermediate table).
+When the owning side is deleted, all the links from the owning side are removed.
+	When a link is removed and orphanRemoval is true, then the child side is deleted as well.
+	!If a link is solely removed from reference side, then the link at the database level is NOT removed. That's why bidirectional relationship needs to handle add/removes bidirectionally.
+When the parent side is deleted and cascadeType includes delete, then child side is deleted as well.
+
+# Unidirectional:
+oneToOne:
+	Customer, shoppingAddress.
+	Access shopping address from customer.
+	
+	Have shoppingAddress fk on customer database table, have shopping address property on customer class.
+OneToMany: only in this case, the owning side doesn't have the foreign key in the corresponding database table.
+	one order could have many orderItem
+	Access orderItems from order.
+	
+	The fk is always on the many side. So have order fk on orderItem table, have Set<OrderItem> on Order class.
+	
+	This is subject to glitches (https://vladmihalcea.com/the-best-way-to-map-a-onetomany-association-with-jpa-and-hibernate). So try to avoid this and use bi-directional one-to-many relationship and have the many side be the owning side.
+ManyToOne:
+	one order could have many orderItem.
+	Access order from orderItem.
+	
+	The fk is always on the many side. So have order fk on orderItem table, have Order on OrderItem class.
+ManyToMany: a join table will be needed
+		If you wish to add some other attributes on intermediate table, then two one-to-many relationships are preferable than many-to-many.
+	Product and store
+	Access products from store.
+	
+	a join table will be needed. In Store class, have Set<Product>. Join column, foreign key to store id. Inverse Join column, foreign key to product Id.
+
+
+# Bidirectional: when an entity is added or removed, it should be operated in both entities.
+	Owning side can customize join column by @JoinColumn, otherwise, the default value will be used.
+oneToOne
+	Owning side could be either side.
+	On reference side, only mappedBy is needed.
+OneToMany, ManyToOne
+	Owning side is the many side.
+	On reference side, only mappedBy is needed.
+ManyToMany
+	Owning side could be either side.
+	On reference side, only mappedBy is needed.
+
+

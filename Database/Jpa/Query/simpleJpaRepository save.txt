@@ -1,0 +1,22 @@
+	@Transactional
+	@Override
+	public <S extends T> S save(S entity) {
+
+		Assert.notNull(entity, "Entity must not be null.");
+
+		if (entityInformation.isNew(entity)) {
+			em.persist(entity);
+			return entity;
+		} else {
+			return em.merge(entity);
+		}
+	}
+	
+
+If the detached object has null id and id is a generated Value, then it is treated as new and call persist.
+
+If the detached object has assigned id without a version property, then it is treated as detached and call merge which will select the item first and then insert / update accordingly.
+
+If the detached object has assigned id with a version property but the property is null, then it is treated as new and call persist.
+
+If the detached object has assigned id with a version property and the property isn't null, then it is treated as detached and call merge which will select the item first and then insert / update accordingly. If the version retrieved is differen't, then stale state exception. (org.hibernate.StaleObjectStateException: Row was updated or deleted by another transaction (or unsaved-value mapping was incorrect) : [com.studio.eric.entity.VersionTest#041dd1cb-ef2e-475f-b78f-f1cdce899fa3])

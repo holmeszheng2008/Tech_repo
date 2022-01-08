@@ -1,0 +1,40 @@
+	Spring AOP is a proxy-based system and differentiates between the proxy object itself (bound to 'this') and the target object behind the proxy (bound to 'target').
+
+############################################################
+(1) In Spring Boot:
+org.springframework.boot.autoconfigure.aop.AopAutoConfiguration
+spring.aop.auto defaults to true and use @EnableAspectJAutoProxy(proxyTargetClass = true)
+
+public class FooDao (implements BarDao) {
+    ...
+}
+(2) @EnableAspectJAutoProxy(proxyTargetClass = true) uses CGLIB-based PROXY
+No matter if the proxied object implements interface, the proxy object will always be a subclass of FooDao
+	where you need to advise a method that is not declared on an interface, or where you need to pass a proxied object to a method as a concrete type.
+
+(3) @EnableAspectJAutoProxy(proxyTargetClass = false) uses jdk-based proxy
+if proxied object implements interface, then the proxy object will be an instance of Proxy class and implement the interface
+if proxied object doesn't implement interface, then the proxy object will be a subclass of FooDao
+
+(4) calls within the target object aren't intercepted.
+Same as @Transactional. Due to the proxy-based nature of Spring’s AOP framework, calls within the target object are by definition not intercepted.
+	If your interception needs include method calls or even constructors within the target class, consider the use of Spring-driven native AspectJ weaving instead of Spring’s proxy-based AOP framework. This constitutes a different mode of AOP usage with different characteristics, so be sure to make yourself familiar with weaving first before making a decision.
+
+(5) Only public signature will be intercepted
+	For JDK proxies, only public interface method calls on the proxy can be intercepted.
+	With CGLIB, public and protected method calls on the proxy will be intercepted, and even package-visible methods if necessary. However, common interactions through proxies should always be designed through public signatures.
+
+	Note that pointcut definitions are generally matched against any intercepted method. If a pointcut is strictly meant to be public-only, even in a CGLIB proxy scenario with potential non-public interactions through proxies, it needs to be defined accordingly.
+
+(6) Interception only works for spring managed beans, not objects newed.	
+
+Spring AOP designators:
+	execution - for matching method execution join points, this is the primary pointcut designator you will use when working with Spring AOP
+	within - limits matching to join points within certain types (simply the execution of a method declared within a matching type when using Spring AOP)
+	this - limits matching to join points (the execution of methods when using Spring AOP) where the bean reference (Spring AOP proxy) is an instance of the given type
+	target - limits matching to join points (the execution of methods when using Spring AOP) where the target object (application object being proxied) is an instance of the given type
+	args - limits matching to join points (the execution of methods when using Spring AOP) where the arguments are instances of the given types
+	@target - limits matching to join points (the execution of methods when using Spring AOP) where the class of the executing object has an annotation of the given type
+	@args - limits matching to join points (the execution of methods when using Spring AOP) where the runtime type of the actual arguments passed have annotations of the given type(s)
+	@within - limits matching to join points within types that have the given annotation (the execution of methods declared in types with the given annotation when using Spring AOP)
+	@annotation - limits matching to join points where the subject of the join point (method being executed in Spring AOP) has the given annotation

@@ -1,0 +1,108 @@
+Owning side in a relationship is the side that doesn't have "mappedBy", so it owns JoinColumn explicitly or implicitly, (Only one-to-many unidirectional is an exception, in the table, the foreign key has to be on the "many" side, but joinColumn is defined on the "one" side)
+	reference side is the side that has "mappedBy"
+Parent side in a relationsihp is the side that contains "cascadeType" and / or "orphanRemoval"
+
+parent side in an one-to-many relationship has to be the "one" side, in one-to-one, many-to-many, could be either side, owning and parent could be the same side.
+When updating something in a bidirectional relationship, the change should be done on both sides. Add, delete.
+
+
+# JPA cascade solution: (one more sql statement) (jpa application level)
+CascadeType means that whenever we persist, merge or delete the parent entity, this operation applies on child entity(entities) as well.
+orphanRemoval means that in the parent entity, whenever we set that association to null or remove a child entity from that association collection (when we break the link), delete operation is applied on that child entity.
+
+# SQL database atomic cascade solution. (just sql statement on parent entity, dbms deals with cascade) (dbms level)
+https://stackoverflow.com/questions/7197181/jpa-unidirectional-many-to-one-and-cascading-delete/38495206
+	@OnDelete(action = OnDeleteAction.CASCADE) in the owning entity
+	Specify the foreign key constraint in the child table as ON DELETE CASCADE. You'll need to invoke EntityManager.clear() after calling EntityManager.remove(parent) as the persistence context needs to be manually refreshed - the child entities are not supposed to exist in the persistence context after they've been deleted in the database.
+
+Repository name-derived methods
+Repository @Query annotation (If DML or DDL is used, then @Modifying is needed and then will leave persistence context outdated)
+	Manually refresh presistence context.
+		@Modifying(flushAutomatically = true)
+		@Modifying(clearAutomatically = true)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Example JPA cascade solution:
+
+CascadeType.REMOVE
+The CascadeType.REMOVE strategy, which you can configure explicitly:
+
+@OneToMany(
+    mappedBy = "post",
+    cascade = CascadeType.REMOVE
+)
+private List<PostComment> comments = new ArrayList<>();
+or inherit it implicitly from the CascadeType.ALL strategy:
+
+@OneToMany(
+    mappedBy = "post",
+    cascade = CascadeType.ALL
+)
+private List<PostComment> comments = new ArrayList<>();
+allows you to propagate the remove operation from the parent entity to its child entities.
+
+So, if we fetch the parent Post entity along with its comments collection, and remove the post entity:
+
+Post post = entityManager.createQuery("""
+    select p
+    from Post p
+    join fetch p.comments
+    where p.id = :id
+    """, Post.class)
+.setParameter("id", postId)
+.getSingleResult();
+
+entityManager.remove(post);
+Hibernate is going to execute three delete statements:
+
+DELETE FROM post_comment 
+WHERE id = 2
+
+DELETE FROM post_comment 
+WHERE id = 3
+
+DELETE FROM post 
+WHERE id = 1
+The PostComment child entities were deleted because of the CascadeType.REMOVE strategy, which acted as if we removed the child entities as well.
+
+The orphan-removal strategy
+The orphan-removal strategy, which needs to be set via the orphanRemoval attribute:
+
+@OneToMany(
+    mappedBy = "post",
+    cascade = CascadeType.ALL,
+    orphanRemoval = true
+)
+private List<PostComment> comments = new ArrayList<>();
+allows you to remove the child table row upon removing the child entity from the collection.
+
+So, if we load the Post entity along with its comments collection and remove the first PostComment from the comments collection:
+
+Post post = entityManager.createQuery("""
+    select p
+    from Post p
+    join fetch p.comments c
+    where p.id = :id
+    order by p.id, c.id
+    """, Post.class)
+.setParameter("id", postId)
+.getSingleResult();
+
+post.remove(post.getComments().get(0));
+Hibernate is going to execute a DELETE statement for the associated post_comment table row:
+
+DELETE FROM post_comment 
+WHERE id = 2

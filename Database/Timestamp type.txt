@@ -1,0 +1,9 @@
+Equivalents:
+	Oracle: timestamp with local time zone -> PostgreSql: timestamp with timezone  (normalized to database timezone) -> mysql: timestamp (normalized to UTC)
+		when retrieved, they are converted to session timezone first.
+	Oracle: timestamp -> postgresql: timestamp without timezone -> mysql: datetime
+
+Input timestamp string:
+	(1) if it contains timezone, then use that timezone and normalize and save.
+	(2) if it doesn't contain timezone, then append with session timezone and then normalize and save.
+						

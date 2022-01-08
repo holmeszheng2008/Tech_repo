@@ -1,0 +1,52 @@
+https://stackoverflow.com/questions/7942520/relationship-between-catalog-schema-user-and-database-instance
+https://stackoverflow.com/questions/7022755/whats-the-difference-between-a-catalog-and-a-schema-in-a-relational-database/7023159#7023159
+### In Oracle ###
+
+server instance == database == catalog == all data managed by same execution engine
+schema == namespace within database, identical to user account
+user == schema owner == named account, identical to schema, who can connect to database, who owns the schema and use objects possibly in other schemas
+to identify any object in running server, you need (schema name + object name)
+In PostgreSQL:
+
+server instance == db cluster == all data managed by same execution engine
+database == catalog == single database within db cluster, isolated from other databases in same db cluster
+schema == namespace within database
+user == named account, who can connect to database, own and use objects in each allowed database separately
+to identify any object in running server, you need (database name + schema name + object name)
+
+### In MySQL ###
+
+server instance == not identified with catalog, just a set of databases
+database == schema == catalog == a namespace within the server.
+user == named account, who can connect to server and use (but can not own - no concept of ownership) objects in one or more databases
+to identify any object in running server, you need (database name + object name)
+
+### In Microsoft SQL Server ###
+
+server instance == set of managed databases
+database == namespace qualifier within the server, rarely referred to as catalog
+schema == owner == namespace within the database, tied to database roles, by default only dbo is used
+user == named account, who can connect to server and use (but can not own - schema works as owner) objects in one or more databases
+to identify any object in running server, you need (database name + owner + object name)
+
+
+
+
+
+So I think answer to your questions is:
+
+It depends on implementation, whether catalog name is needed to identify objects. The meaning of "catalog", "schema" and "database" vary from one implementation to another.
+
+Yes, a catalog is an abstraction of data storage. I think it should be also defined as a self-contained isolated namespace, but not all SQL engines do it.
+
+Database and schema are pretty well defined by all vendors. Catalog is sometimes synonymous to "database" (at least in Oracle and Postgres), sometimes synonymous to "schema", and sometimes synonymous to both. The term catalog also often means metadata collection (aka system tables).
+
+
+
+
+JPA
+@Table(name = "version_test", schema = "world")
+(1) in mysql, it must be catalog to be specified, not schema, although in mysql it's called schema.
+(2) in postgresql, it must be schema to be specified since they are actually schemas. If it's not specified, the default schema to be used is "public"
+
+Tried that in Mysql and Postgresql, you can actually join tables from multiple schemas.

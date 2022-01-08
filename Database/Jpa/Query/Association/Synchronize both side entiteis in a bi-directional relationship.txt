@@ -1,0 +1,82 @@
+Parent side examples:
+
+# one-to-many
+post - comments
+
+    public void addComment(PostComment comment) {
+        comments.add(comment);
+        comment.setPost(this);
+    }
+ 
+    public void removeComment(PostComment comment) {
+        comments.remove(comment);
+        comment.setPost(null);
+    }
+
+# one-to-one
+	post - detail
+
+	// I prefer to call this addDetails. set is more common and prone to infinite recursive calls
+    public void setDetails(PostDetails details) {
+		if (this.details == details) {
+			return;
+		}
+		if (this.details != null){
+			this.details.post = null;
+		}
+        if (details != null) {
+            details.setPost(this);
+        }
+
+        this.details = details;
+    }
+
+
+# many-to-many
+	post - tag
+
+    public void addTag(Tag tag) {
+        tags.add(tag);
+        tag.getPosts().add(this);
+    }
+ 
+    public void removeTag(Tag tag) {
+        tags.remove(tag);
+        tag.getPosts().remove(this);
+    }
+
+The child entity, PostComment, implement the equals and hashCode methods. Since we cannot rely on a natural identifier for equality checks, we need to use the entity identifier instead for the equals method. However, you need to do it properly so that equality is consistent across all entity state transitions, which is also the reason why the hashCode has to be a constant value. Because we rely on equality for the removeComment, it’s good practice to override equals and hashCode for the child entity in a bidirectional association.
+
+@Entity
+public class MyEntity {
+ 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+ 
+    private LocalDate date;
+ 
+    private String message;
+         
+    @Override
+    public int hashCode() {
+        return 13;
+    }
+ 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        MyEntity other = (MyEntity) obj;
+        return id != null && id.equals(other.getId());
+    }
+ 
+    ...
+}
+
+1. natural business key
+2. pre-generated uuid

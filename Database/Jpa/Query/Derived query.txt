@@ -1,0 +1,13 @@
+JPA repository supports derived methods as below:
+(1) find
+	findBy, readBy, getBy, and queryBy (all behaves the same)
+(2) count
+	countBy
+(3) delete
+	deleteBy
+	It will first fetch all related entities by findBy and then delete each of them by Id.
+	So, this one will update the persistence context but the performance is bad.
+
+@Query and @Modifing
+As to Custom queries with @Query and @Modifing, update operations won't update the persistence context since hibernate won't be able to konw what entities are modified.
+	So either manual detach is needed, or @Modifying(clearAutomatically, flushAutomatically) to clear all

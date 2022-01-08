@@ -1,0 +1,4 @@
+TypeScript
+
+TypeScript is actually JavaScript with static type checker
+	and then transpiled to JavaScript code.

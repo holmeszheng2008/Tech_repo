@@ -1,0 +1,103 @@
+Join vs. Join Fetch
+
+### model ###
+public class Employee {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
+    private Integer id;
+    private String firstName;
+    private String lastName;
+    private String position;
+    private int salary;
+    private int age;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "department_id")
+    @JsonIgnore
+    private Department department;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "organization_id")
+    private Organization organization;
+}
+
+public class Department {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
+    private Integer id;
+    private String name;
+    @OneToMany(mappedBy = "department")
+    private Set<Employee> employees;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "organization_id")
+    private Organization organization;
+}
+
+public class Organization {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
+    private Integer id;
+    private String name;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "organization")
+    private Set<Department> departments;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "organization")
+    private Set<Employee> employees;
+}
+
+##################################################################
+Left Join: only top level is fetched although joins are done
+    @Query(value = "select e from Employee e left join e.department d left join e.organization")
+    List findAllWithDepAndOrg();
+
+    select
+        employee0_.id as id1_2_,
+        employee0_.age as age2_2_,
+        employee0_.department_id as departme7_2_,
+        employee0_.first_name as first_na3_2_,
+        employee0_.last_name as last_nam4_2_,
+        employee0_.organization_id as organiza8_2_,
+        employee0_.position as position5_2_,
+        employee0_.salary as salary6_2_ 
+    from
+        world.employee employee0_ 
+    left outer join
+        world.department department1_ 
+            on employee0_.department_id=department1_.id 
+    left outer join
+        world.organization organizati2_ 
+            on employee0_.organization_id=organizati2_.id
+
+Left Join fetch: multiple levels deep are also fetched
+
+    @Query(value = "select e from Employee e left join fetch e.department d left join fetch d.organization")
+    List findAllWithDepAndOrg();
+	
+	select
+        employee0_.id as id1_2_0_,
+        department1_.id as id1_1_1_,
+        organizati2_.id as id1_4_2_,
+        employee0_.age as age2_2_0_,
+        employee0_.department_id as departme7_2_0_,
+        employee0_.first_name as first_na3_2_0_,
+        employee0_.last_name as last_nam4_2_0_,
+        employee0_.organization_id as organiza8_2_0_,
+        employee0_.position as position5_2_0_,
+        employee0_.salary as salary6_2_0_,
+        department1_.name as name2_1_1_,
+        department1_.organization_id as organiza3_1_1_,
+        organizati2_.name as name2_4_2_ 
+    from
+        world.employee employee0_ 
+    left outer join
+        world.department department1_ 
+            on employee0_.department_id=department1_.id 
+    left outer join
+        world.organization organizati2_ 
+            on department1_.organization_id=organizati2_.id
