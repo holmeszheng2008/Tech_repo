@@ -1,0 +1,22 @@
+(1) function component:
+	restriction: ref attribute can't be used on a function component
+	
+function MyFunctionComponent(props) {
+  {destructure} = props;
+  return <input />;
+}
+
+
+(2) class component
+class ClassComponent extends React.Component {
+	constructor(props){
+		super(props);
+	}
+	render(){
+	}
+}
+
+# Below two wrap 
+(3) React.memo
+
+(4) React.forwarRef

@@ -70,6 +70,7 @@
 	## rename a branch
 		git branch -m <branch>
 			Rename the current branch to ＜branch＞.
+
 # git fetch
 	## git fetch <remote>
 		fetch all branches from remote
@@ -95,7 +96,7 @@
 		>>>>>>> feature branch;
 		Generally the content before the ======= marker is the receiving branch and the part after is the merging branch.
 		
-	
+
 # git checkout vs git reset
 	## git checkout <branch-name>/[checksum/head]
 		git checkout only moves the head ref to the specified checksum

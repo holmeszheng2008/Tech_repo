@@ -1,0 +1,30 @@
+let obj = {
+	deleteRow(id, arg2, arg3){
+		console.log(this);
+	}
+}
+
+
+### important ###
+let func1 = obj.deleteRow
+	then this in func1 is unbound
+obj.deleteRow(id, arg2, arg3)
+	this is bound
+
+3 ways to bind this:
+(1) func2 = func1.bind(obj, id) -> returns a new function func2
+
+func2(arg2, arg3)
+	is equivalent to
+		obj.deleteRow(id, arg2, arg3)
+
+(2) func1.call(obj, id, arg2, arg3)
+
+(3) func1.apply(obj, [id, arg2, arg3])
+	is equivalent to:
+		func1.call(obj, ...[id, arg2, arg3])
+
+
+
+func.call(context, args1, args2 );   // pass arguments as "," separated value
+func.apply(context, [args1, args2]); // pass arguments as "Array"

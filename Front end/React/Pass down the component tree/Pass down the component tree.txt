@@ -1,0 +1,90 @@
+(1) prop drilling. Bad since each intermediate component has to get that variable to pass it further down.
+const PropDrilling = () => {
+  const [people, setPeople] = useState(data);
+  const removePerson = (id) => {
+    setPeople((people) => {
+      return people.filter((person) => person.id !== id);
+    });
+  };
+  return (
+    <section>
+      <h3>prop drilling</h3>
+      <List people={people} removePerson={removePerson} />
+    </section>
+  );
+};
+
+const List = ({ people, removePerson }) => {
+  return (
+    <>
+      {people.map((person) => {
+        return (
+          <SinglePerson
+            key={person.id}
+            {...person}
+            removePerson={removePerson}
+          />
+        );
+      })}
+    </>
+  );
+};
+
+const SinglePerson = ({ id, name, removePerson }) => {
+  return (
+    <div className='item'>
+      <h4>{name}</h4>
+      <button onClick={() => removePerson(id)}>remove</button>
+    </div>
+  );
+};
+(2) create context
+# const MyContext = React.createContext(defaultValue);
+The defaultValue argument is only used when a component does not have a matching Provider above it in the tree.
+
+# Provider
+<MyContext.Provider value={/* some value */}>
+
+Allows consuming components to subscribe to context changes.
+Providers can be nested to override values deeper within the tree.
+All consumers that are descendants of a Provider will re-render whenever the Provider’s value prop changes based on Object.is. So lift the definition of value up and use reference in the value={value} to avoid unecessary updates of consumers whenever provider is re-rendered. don't do this <ThemeContext.Provider value={{a: a, b: b}}>, instead do <ThemeContext.Provider value={this.state.theme}>
+
+# How to subscribe consumers
+
+## function: useContext
+	const value = useContext(PersonContext);
+
+## class:
+	static contextType = MyContext;
+	let value = this.context;
+
+## MyContext.Consumer
+	<MyContext.Consumer>
+	  {value => /* render something based on the context value */}
+	</MyContext.Consumer>
+
+	(currentContextValue) => JSX node
+
+# re-render a top component from a deeply nested component
+Pass in the context a function that does re-render of top component by calling (setState, set***, dispatch)
+
+# Consuming Multiple Contexts
+      <ThemeContext.Provider value={theme}>
+        <UserContext.Provider value={signedInUser}>
+          <Content />
+        </UserContext.Provider>
+      </ThemeContext.Provider>
+
+	function Content() {
+	  return (
+	    <ThemeContext.Consumer>
+	      {theme => (
+		<UserContext.Consumer>
+		  {user => (
+		    <ProfilePage user={user} theme={theme} />
+		  )}
+		</UserContext.Consumer>
+	      )}
+	    </ThemeContext.Consumer>
+	  );
+      

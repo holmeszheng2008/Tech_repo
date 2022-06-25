@@ -1,0 +1,2 @@
+window.addEventListener("resize", eventHandler);
+window.removeEventListener("resize", eventHandler);

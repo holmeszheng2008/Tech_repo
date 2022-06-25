@@ -1,0 +1,81 @@
+# ref is a reserved attribute and doesn't appear in the props.
+	ref is to target a DOM element or a class component. Can't target a function component!!!
+	ref={refVar} means to asign the reference to refVar. So there are two workarounds to pass the refVar down the hierarchy.
+
+
+(1) Use a customized attribute name other than ref and then only use ref={refVar} in the child component as needed. (works for both function and class components)
+
+class component: use a customised attribute to forward the "refVar" to be used in the bottom layer (React class component or HTML DOM)
+	ref and key are reserved JSX attribute, they don't appear in the props.
+function CustomTextInput(props) {
+  return (
+    <div>
+      <input ref={props.inputRef} /> // the place where ref is used
+    </div>
+  );
+}
+
+function Parent(props) {
+  return (
+    <div>
+      My input: <CustomTextInput inputRef={props.inputRef} />
+    </div>
+  );
+}
+
+class Grandparent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.inputElement = React.createRef();
+  }
+  render() {
+    return (
+      <Parent inputRef={this.inputElement} />
+    );
+  }
+}
+
+
+
+(2) forward ref: wrap an existing function / class component for ref forwarding. The main purpose is that you can reuse the "ref" keyword but not to associate but solely for ref forwarding
+eg1:
+function MyButton(props) {
+	return <button ref={props.forwardRef}> {props.children} </button>
+}
+const FancyButton = React.forwardRef((props, ref) => (
+  <MyButton forwardRef={ref} className="FancyButton">
+    {props.children}
+  </MyButton>
+));
+
+// You can now use "ref" attribute to forward the refVar to the DOM button:
+const refVar = React.createRef();
+<FancyButton ref={refVar}>Click me!</FancyButton>;
+	Normally, this ref won't work on a function component. But because of forward ref, it is passed downward to button where ref is supported.
+
+eg2:
+function logProps(Component) {
+  class LogProps extends React.Component {
+    componentDidUpdate(prevProps) {
+      console.log('old props:', prevProps);
+      console.log('new props:', this.props);
+    }
+
+    render() {
+      const {forwardedRef, ...rest} = this.props;
+
+      // Assign the custom prop "forwardedRef" as a ref
+      return <Component ref={forwardedRef} {...rest} />;
+    }
+  }
+
+  // Note the second param "ref" provided by React.forwardRef.
+  // We can pass it along to LogProps as a regular prop, e.g. "forwardedRef"
+  // And it can then be attached to the Component.
+  return React.forwardRef((props, ref) => {
+    return <LogProps {...props} forwardedRef={ref} />;
+  });
+}
+
+## when seeing "ref", there could be two usages associated with that. ref assignment or ref forward
+	general idea of passing down refVairable is through a custom named property, though you can use React.forwardRef to reuse ref

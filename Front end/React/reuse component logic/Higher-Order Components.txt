@@ -1,0 +1,26 @@
+A higher-order component (HOC) is an advanced technique in React for reusing component logic. HOCs are not part of the React API, per se. They are a pattern that emerges from React’s compositional nature.
+
+A higher-order component is a function that takes a component and returns a new component.
+
+# Pattern:
+const EnhancedComponent = hocFunc(WrappedComponent, otherVars...);
+(WrappedReactComponent, otherVars...) => EnhancedComponent
+
+Instead of mutation, HOCs should use composition, by wrapping the input component in a container component:
+# eg:
+function logProps(WrappedComponent) {
+  return class extends React.Component {
+    componentDidUpdate(prevProps) {
+      console.log('Current props: ', this.props);
+      console.log('Previous props: ', prevProps);
+    }
+    render() {
+      // Wraps the input component in a container, without mutating it. Good!
+      return <WrappedComponent {...this.props} />;
+    }
+  }
+}
+
+class FancyButton {/* ... */}
+const LogPropsButton = logProps(FancyButton);
+<LogPropsButton color={color}>

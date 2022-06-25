@@ -1,0 +1,55 @@
+Array, linked list:
+	Dummy head: in linked list questions, if the new head can either be or not be the original head, then create a dummy head. If it always be the old head or new head, then no need to create the dummy head.
+	Common solutions:
+# Two pointers: 
+## 左右指针: 中间向两端扩散的双指针、两端向中间收缩的指针
+多用于数组, especially sorted
+			while (left < right) -> [left, right)
+			while (left <= right) -> [left, right]
+				表示有效区间
+## Binary search: on sorted array (or on monotonic functions) 
+[left, right), mid = left + (right-left) / 2
+## 快慢指针
+	多用于链表，数组
+## 滑动窗口
+	多用于substring matching（子数组）问题
+# PreSum: for frequently calculate sum in a range
+
+前缀和主要适⽤的场景是原始数组不会被修改的情况下，频繁查询某个区间的累加和。
+class PrefixSum {
+// 前缀和数组
+private int[] prefix;
+/* 输⼊⼀个数组，构造前缀和 */
+public PrefixSum(int[] nums) {
+prefix = new int[nums.length + 1];
+// prefix[0] = 0; auto
+// 计算 nums 的累加和
+for (int i = 0; i < nums.length; i++) {
+prefix[i+1] = prefix[i] + nums[i];
+}
+}
+/* 查询闭区间 [i, j] 的累加和 */
+public int query(int i, int j) {
+return prefix[j + 1] - prefix[i];
+}
+}
+Prefix[i] means the sum before nums[i]
+# Diff array:
+差分数组的主要适⽤场景是频繁对原始数组的某个区间的元素进⾏增减.
+	int[] diff = new int[nums.length];
+// 构造差分数组
+diff[0] = nums[0];
+for (int i = 1; i < nums.length; i++) {
+diff[i] = nums[i] - nums[i - 1];
+}
+	Diff[i] means nums[i] – nums[i-1]
+
+
+
+
+# Data structure design:
+(1) O(1) search -> HashMap
+(2) keep insertion order -> List
+	## ArrayList -> O(1)random access, O(1) insert/delete at rear, O(N) insert/delete elsewhere;
+		Have illegal elements(holes) in an arrayList, make the front portion logically adjacent and all legal with the help of hashMap
+	## LinkedList -> O(N) index access, O(1) insert / delete everywhere

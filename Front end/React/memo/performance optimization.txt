@@ -1,0 +1,22 @@
+Performance optimization:
+	memoizing - caching results
+	React is fast by default, Optimization add their own costs. Only do that if you have extremely costly renders.
+
+When a class component is a sub class of Component, it is re-rendered whenever:
+	parent re-renders	(parent re-renders but may or may not change chilren props)
+	state changes		(through internal set***)
+	context changes		(through context provider change)
+	props change		(parent re-renders and change props passed in)
+
+# PureComponent
+have shouldComponentUpdate out of box, check props and state shallow comparison.
+
+# React.memo (an HOC function, checks props shallow comparison)
+const enhancedComponent= React.memo(wrappedComponent);
+React.memo only checks for props shallow comparison. if props is not changed, then memoized element is reused.
+
+# useMemo(()=>{return a value, dependency exist in this scope}, [dependency...])	// it takes a supplier function
+
+# useCallback(function)
+	equivalent to:
+		useMemo(() => {return a function, dependency exist in this scope}, [dependency...])

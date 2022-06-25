@@ -1,0 +1,2 @@
+Building custom hooks lets you extract component logic snippet into reusable functions. A custom Hook is a JavaScript function whose name starts with ”use” and that may call other Hooks. 
+hooks can only be called inside function components and custom hooks

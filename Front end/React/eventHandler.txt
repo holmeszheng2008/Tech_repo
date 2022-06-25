@@ -1,0 +1,41 @@
+All supported React events:
+https://reactjs.org/docs/events.html
+
+(1) function component example
+
+function outsideHandler(e) {
+    console.log(e);
+    console.log(e.target);
+}
+const Book = ({ img, title, author }) => {
+  // attribute, eventHandler
+  // onClick, onMouseOver
+  const clickHandler = (e) => {
+    console.log(e);
+    console.log(e.target);	// this gives the component that triggered the event
+    alert("hello world");
+  };
+  const complexExample = (author) => {
+    console.log(author);
+  };
+  return (
+    <article
+      className="book"
+      onMouseOver={() => {
+        console.log(title);
+      }}
+    >
+      <button type="button" onClick={clickHandler}>	// reference eventHandler
+        reference example
+      </button>
+      <button type="button" onClick={outsideHandler}>	// reference eventHandler
+        reference example
+      </button>
+      <button type="button" onClick={(e) => complexExample(author)}>	// inline eventHandler
+        more complex example
+      </button>
+    </article>
+  );
+};
+
+(2) class component example

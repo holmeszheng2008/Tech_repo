@@ -1,0 +1,32 @@
+# useState is stateful, during initial render, it will use intial value and during updates, it will return previous state.
+
+eg:
+import React, { useState } from 'react';
+const [text, setText] = useState('random title'); // text is then assigned the default value in the state
+
+
+  const handleClick = () => {
+    if (text === 'random title') {
+      setText('hello world');
+    } else {
+      setText('random title');
+    }
+  };
+  
+  whenever component is re-rendered, actually the whole function is re-called and hence the variable "text" is re-assigned.
+  
+  
+# pass supplier function into the set*** function to capture the current state
+
+const complexIncrease = () => {
+setTimeout(() => {
+  // setValue(value + 1);	// value from here is passed in when setTimeout is called
+  setValue((prevState) => {
+	return prevState + 1;	// prevState passed in here is really the current value when 				   setValue is called
+  });
+}, 2000);
+};
+
+# Note:
+	In set***, if the new state is Object.is old state, then the update won't be triggered.
+	Use with care when set*** is used insde useEffect.

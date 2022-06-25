@@ -1,0 +1,4 @@
+Notes:
+(1)	2 sum
+sorted -> two pointers
+		Unsorted -> hashmap

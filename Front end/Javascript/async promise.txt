@@ -1,0 +1,114 @@
+An async function is run asynchronously and returns a promise(either a pending placeholder or fufilled).
+await only blocks inside the async function, but doesn't block whatever calls that async function (placeholder is returned in the first place).
+
+==============================
+(1) In an async function, if call is blocked at await, it will return a placeholder(pending) promise first and continue at the place where that async funtion is called.
+(2) If a promise is rejected, it will throw an exception at the place where that promise is returned.
+(3) In a placeholder(pending) promise, if an exception is thrown during the execution, then the execution stops immediately as normal throw and the promise is set as rejected.
+
+eg:
+#1.
+async function func1() {
+  return new Promise((resolve, reject) => { setTimeout(() => { console.log("run func1"); reject("func1") }, 2000); });
+}
+
+async function func2() {
+  return new Promise((resolve, reject) => { setTimeout(() => { console.log("run func2"); reject("func2");}, 5000); });
+}
+
+async function func3() {
+  let p1 = func1();
+  let p2 = func2();
+  throw "wrong";
+}
+a = func3();
+a is a promise (rejected "wrong")
+then promise p1 and p2 will throw exception afterwards.
+
+#2.
+async function func4() {
+  let p1 = func1();
+  let p2 = func2();
+  await p1; // this is blocked first and throws exception and then ends this function execution.
+  await p2;	// this will never be called but p2 promise will throw exception asynchronously.
+  
+  return 100; // This is a promise
+}
+
+a = func4();
+// at first, a is a pending promise (placeholder), and code flow continues here. all following calls on the pending promise is skipped.
+// then await p1 throws exception, this promise is set as rejected.
+// all following calls on that previous pending promise is evaluated in sequence.
+
+#3.
+async function func1() {
+  return new Promise((resolve, reject) => { setTimeout(() => { console.log("run func1"); reject("func1") }, 5000); });
+}
+
+async function func2() {
+  return new Promise((resolve, reject) => { setTimeout(() => { console.log("run func2"); reject("func2");}, 1000); });
+}
+
+async function func5() {
+  let p1 = func1();
+  let p2 = func2();
+  
+  await p1;
+  await p2;
+
+  return 100;
+}
+a = func5();
+console.log("hello")
+// promise p2 finishes before p1, it will throw exception. But it was blocked at "await p1" and that throws exception, so the completed promise is reject func1. It means that in the async function, the completed promise is generated at where the function stack pointer was.
+
+#4.
+async function func6() {
+  let p1 = func1();
+
+  await p1;
+ 
+  let p2 = func2();
+  await p2;
+
+  return 100;
+}
+
+// promise p2 won't even be created
+
+#5.
+async function func7() {
+  let p1 = func1();
+
+  throw "error happening";
+  await p1;
+ 
+  let p2 = func2();
+  await p2;
+
+  return 100;
+}
+
+// rejected promise is "error happening", promise p1 completed after that and throw an uncaught exception.
+
+#6.
+async function func8() {
+  let p1 = func1();
+
+  setTimeout(()=>{throw "error happening";}, 2000);
+  await p1;
+ 
+  let p2 = func2();
+  await p2;
+
+  return 100;
+}
+
+
+// In setTimeout, that's a callback function. So, the function stack pointer was at "await p1". "error happening" is thrown first and uncaught, then the completed promise is "rejected func1"
+// code is not blocked at callback function. call back function is run asynchronously in another thread.
+// it won't work even if you do:
+try{
+	setTimeout(()=>{throw "error happening";}, 2000);
+	} catch(er){
+}

@@ -1,0 +1,36 @@
+const names = ["John", "Peter", "Susan"];
+const nameList = names.map((name)=> {
+	return <h1>{name}</h1>;
+});
+function BookList() {
+	return (
+		<div>
+			{nameList}
+		</div>
+	);
+	
+	// this is treated as
+	<div>
+		<h1>John</h1>
+		<h1>Peter</h1>
+		<h1>Susan</h1>
+	</div>
+}
+
+## Each direct React component in the array needs to have "key" attribute
+const nameList = names.map((name, index)=> {
+	return <h1 key={index}>{name}</h1>;
+});
+
+## each state is considered immutable by React, so if you modify that, you need to create a new one instead of in-place modification.
+
+eg:
+const [people, setPeople]  = useState([person1]);
+const submitHandler = (people) => {
+	person2 = {};
+	// this doesn't work because it modifies in place
+	people.push(person2);
+	
+	// a new array needs to be created
+	return [...people, person2];
+}

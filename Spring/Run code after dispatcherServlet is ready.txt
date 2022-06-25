@@ -1,0 +1,25 @@
+// method 1
+@Component
+public class BeanOnStartup implements ApplicationListener<ContextRefreshedEvent> {
+
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent event) {
+        // TODO Auto-generated method stub
+        trySend();
+    }
+
+    public void trySend() {
+        RestTemplate restTemplate = new RestTemplate();
+        try {
+            String str = restTemplate.exchange("http://localhost:8180/test/hello", HttpMethod.GET, null, String.class).getBody();
+            System.out.println("here: " + str);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+}
+
+
+// method 2
+spring.mvc.servlet.load-on-startup: 1
+@PostConstruct

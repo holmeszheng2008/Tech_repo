@@ -1,0 +1,11 @@
+(1) external css file
+import from "./index.css"
+<div className="booklist"> </div>
+
+(2) inline style
+<h1 style={ {color: "#614d98", font: "0.75rem", marginTop: "0.25rem"} }> </h4>
+
+let myStyle = {color: "#614d98", font: "0.75rem", marginTop: "0.25rem"};
+<h1 style={ myStyle }> </h4>
+
+inline style takes precedence over external css file, takes extra care if you use 3rd party libraries.

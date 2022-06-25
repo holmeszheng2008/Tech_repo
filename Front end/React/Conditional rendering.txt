@@ -1,0 +1,71 @@
+(1) multiple returns based on conditions
+const MultipleReturns = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
+  const [user, setUser] = useState('default user');
+
+  useEffect(() => {
+    fetch(url)
+      .then((resp) => {
+        if (resp.status >= 200 && resp.status <= 299) {
+          return resp.json();
+        } else {
+          setIsLoading(false);
+          setIsError(true);
+          throw new Error(resp.statusText);
+        }
+      })
+      .then((user) => {
+        const { login } = user;
+        setUser(login);		// set***s are stacked and take effect when function returns
+        setIsLoading(false);
+      })
+      .catch((error) => console.log(error));
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div>
+        <h1>Loading...</h1>
+      </div>
+    );
+  }
+  if (isError) {
+    return (
+      <div>
+        <h1>Error....</h1>
+      </div>
+    );
+  }
+  return (
+    <div>
+      <h1>{user}</h1>
+    </div>
+  );
+};
+(2) short-circuit evaluation
+	let text = '';
+	let text = "k";
+	{text || "hello world"}
+	{text && "hello world"}
+
+(3) ternary operator
+      {isError ? (
+        <p>there is an error...</p>
+      ) : (
+        <div>
+          <h2>there is no error</h2>
+        </div>
+      )}
+(4) component return null instead of JSX. lifecycles of the component are still triggered. This may not work well together with hooks since hook can't be used with conditions.
+function WarningBanner(props) {
+  if (!props.warn) {
+    return null;
+  }
+
+  return (
+    <div className="warning">
+      Warning!
+    </div>
+  );
+}

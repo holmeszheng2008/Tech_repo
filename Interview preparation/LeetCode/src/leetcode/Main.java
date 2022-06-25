@@ -1,12 +1,13 @@
 package leetcode;
 
-import array_linked_list.two_pointers.sliding_window.Solution3;
+import data_structure_design_to_satisfy.Solution772;
 
 public class Main {
 
     public static void main(String[] args) {
-        // TODO Auto-generated method stub
-        new Solution3().lengthOfLongestSubstring("abcabcbb");
-    }
 
+        Solution772 instance = new Solution772();
+        instance.calculate(" 2-1 + 2 ");
+        System.out.println("hello");
+    }
 }

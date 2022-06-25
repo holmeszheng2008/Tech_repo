@@ -1,0 +1,88 @@
+(1) configure(HttpSecurity)
+# whitelist
+# httpBasic
+# formlogin
+
+
+(2) UserDetailsService userDetailsService()
+how to retrive user information
+username
+password
+role
+authorization
+others
+
+eg:
+# create a userDetails
+UserDetails user1 = User.builder()
+.username("a")
+.password("password") // password must be encoded with bean "PasswordEncoder", spring security also used that for password comparison
+.roles("STUDENT") // Spring saves this role as "ROLE_STUDENT" internally
+.build();
+# return new InMemoryUserDetilasManager(user1);
+
+
+(3) roles and permissions (synonymous to: authorities)
+ADMIN //role
+{
+	// permissions
+	[
+		STUDENT:READ,
+		STUDENT:WRITE,
+		COURSES:READ,
+		COURSES:WRITE
+	]
+}
+
+STUDENT //role
+{
+	// permissions
+	[
+		STUDENT:READ,
+		STUDENT:WRITE,
+		COURSES:READ
+	]
+}
+
+common String, collectionUtils:
+	-> com.google.guava; guava; 28.1-jre
+
+	Sets.newSet()
+
+(4) role based authentication
+	.antMatchers("/api/**").hasRole("STUDENT")
+	
+	role is also a form of authority that starts with "ROLE_"
+	permission is the permission name as-is
+
+(5) authority based authentication
+	.antMatchers("HttpMethod.DELETE, "/management/api/**").hasAuthority("COURSES:WRITE")
+	.antMatchers("HttpMethod.POST, "/management/api/**").hasAuthority("COURSES:WRITE")
+	.antMatchers("HttpMethod.PUT, "/management/api/**").hasAuthority("COURSES:WRITE")
+	.antMatchers("HttpMethod.GET, "/management/api/**").hasAnyRole("ADMIN", "ADMINTRAINEE")
+
+
+	User.builder().authorities(Collection(? extends GrantedAuthorities))
+		// it's a collection of "ROLE_*" + permission names as-is
+	
+	In the user authority definition, the role is "ROLE_ADMIN", but when used in hasRole, it's "ADMIN"
+	"ROLE_" is the distinction between role and permission. Role and permissions are both bundled inside the collection of Collection<? extends GrantedAuthority>
+
+(6) Java enum is just a class with a bunch of pre-defined instances. All other members are the same
+
+(7) order of the antmatchers matters
+	first defined first served
+
+(8) Authority based authentication through method level annotations
+# in WebSecurityConfigurerAdapter
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+
+# in restController
+// hasRole('ROLE_') hasAnyRole('ROLE_', 'ROLE_') hasAuthority('permission') hasAnyAuthority('permission', 'permission')
+@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ADMINTRAINEE')")
+@PreAuthorize("hasAuthority('student:write')")
+@PreAuthorize("hasAuthority('student:write')")
+@PreAuthorize("hasAuthority('student:write')")
+
+
+(9) CSRF: Cross site request forgery

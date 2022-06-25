@@ -1,0 +1,66 @@
+(1) this keyword unboundwhen called outside
+class Test {
+	constructor() {
+		this.arg = "hello";
+	}
+	
+	func() {
+		console.log(this.arg);
+	}
+}
+
+
+let inst1 = new Test();
+let func1 = inst1.func;
+	this in func1() is unbound
+
+### If the function is a lambda, then this key word is already bound.
+
+//////////
+func1()
+	-> this is undefined
+this used outside the scope is unbound, for use cases like call back functions.
+call back function defined using () => {this.func()}, this is bound.
+
+let inst2 = {
+	arg: "morning"
+}
+
+func1 = func1.bind(inst2)
+func1() // correct
+
+(2) Unlike Java, the constructor in the subClass doesn't have to be defined. If missing, it will pick up the closest one from hierarchy prototype.
+
+(3) static property, static block, static method.
+
+(4) how to define a member function
+func()
+get func()
+set func()
+func*()
+async func()
+async func*()
+	returns a generator of promise
+
+eg:
+async function* asyncGenerator() {
+  let i = 0;
+  while (i < 3) {
+    yield i++;
+  }
+}
+
+(async () => {
+  for await (const num of asyncGenerator()) {
+    console.log(num);
+  }
+})();
+// 0
+// 1
+// 2
+	equivalent to manually get next() of the generator which is a promise and await on that.
+(5) Unlike Java but like python, there can't be same variable name living in both super and subclass domain. There is only one set from this. Those functions defined in super class live in the prototype of super class.
+
+(6) In React, only use composition and props instead of inheritance.
+
+(7) In a class, it can call a function defined outside the class.

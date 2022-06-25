@@ -4,7 +4,7 @@ All recursions have following steps:
 	递归的思想相对迭代思想，稍微有点难以理解，处理的技巧是：不要跳进递归，而是利用明确的定义来实现算法逻辑。
 
 Difference on details deriving from algorithms
-(1) divide and conquer
+(1) divide and conquer (recursion without overlapping sub-problems)
 	just recursion, no overlapping sub problems.
 in recursive function, in place problem solving, pass initial problem as parameter, return void.
 
@@ -13,6 +13,21 @@ a. base cases
 b. transition function. condition, direction. will influence direction from border inward in matrix.
 c. tabulation (populate matrix from base cases) / memoization (null if answer of sub-problem not memoized yet)
 
+	DP: recursion + 重复子问题
+	// Bottom-up dp problems sovling procedures
+	// 1. base cases.
+	// 2. transition funciton + condition + direction 
+	transition function to derive from base cases, moving from bottom-up. Direction shall be noticed. (condition may affect direction for edge spots)
+	// 3. tabulation.
+	tabulation by iteration from base cases through direction and fufill the matrix. Need to fill all the matrix to get result.
+
+	// Top-down dp problems sovling procedures
+	// 1. base cases
+	// 2. transition funciton + condition + direction 
+	transition function to derive from base cases, moving from bottom-up. Direction shall be noticed. (condition may affect direction for edge spots)
+	// 3. memoization
+	memoization (initialize an object matrix, if not set, the object value is null). Written as recursion + memoization.
+	Know exactly where the result is in the matrix, then top down.
 
 (3) Tree structure algorithm (Traverse, divide and conqure)
 a. traverse
@@ -46,5 +61,22 @@ Enumerate (Traverse) over all valid nodes, result is got when reaching a leaf no
 
 transition function:
 	prefix path and choice list and (result) are passed in the transition function.
+
 when recursively called, go one level deeper.
 if multiple choices in one level, apply choice before going deeper and revert that choice after getting back
+
+result = []
+def backtrack(路径, [选择列表参数], result):
+	if 满足结束条件 (reach leaf node):
+		result.add(路径)
+		return
+	for 选择 in 选择列表:
+		// filter out invalid choice
+		if (choice is invalid) {
+			continue;
+		}
+		做选择
+		backtrack(路径, [选择列表参数], result)   -> one level deeper
+		撤销选择 (if no more following choices, then this is not needed)
+
+每一层都有已经走过的路径和选择列表，有时候选择列表要依靠选择列表参数来生成

@@ -28,6 +28,7 @@ public class PlayGround {
         // absolute path (from the root of jar)
         InputStream is = PlayGround.class.getResourceAsStream("/resources/hello.txt");
 
+		// preferred way
         // relative path only from the root of jar
         InputStream is = PlayGround.class.getClassLoader().getResourceAsStream("resources/hello.txt");
 

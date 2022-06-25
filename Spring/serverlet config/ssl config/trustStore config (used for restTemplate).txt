@@ -1,0 +1,19 @@
+@Component
+public class TrustStoreConfig {
+	@Value("${server.ssl.truststore}")
+	private String truststorePath;
+	
+	@PostConstruct
+	public void setProperty() {
+		if (truststorePath == null || truststorePath.isEmpty()){
+			return;
+		}
+		if (!new File(truststorePath).exists()) {
+			throw new IllegalArgumentException("Invalid truststore path " + truststorePath);
+		}
+		
+		System.setProperty("javax.net.ssl.trustStore", truststorePath);
+		System.setProperty("javax.net.ssl.trustStorePassword", "changeit");
+	}
+
+}

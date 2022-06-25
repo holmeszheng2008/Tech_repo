@@ -1,0 +1,44 @@
+<Hello>
+	<InnerOne>
+		<InnerTwo>
+		</InnerTwo>
+	</InnerOne>
+	<Parallel>
+	</Parallel>
+</Hello>
+	When one upper element goes through the lifecycle like (changing props, states, context), decendant elements will go through the lifecycle as well. But if they don't have changed props, states, or context, they will not be re-rendered.
+
+# Mounting (initial-render)
+These methods are called in the following order when an instance of a component is being created and inserted into the DOM:
+
+constructor(props)
+static getDerivedStateFromProps(props, state)
+render()
+componentDidMount()
+
+# Updating (re-render)
+An update can be caused by changes to props, state, context. These methods are called in the following order when a component is being re-rendered:
+
+static getDerivedStateFromProps(props, state)
+shouldComponentUpdate(nextProps, nextState)
+	Defaults to true, means that the component will always be rendered.
+	PureComponent will do a shallow comparison.
+render()
+getSnapshotBeforeUpdate(prevProps, prevState)
+componentDidUpdate(prevProps, prevState, snapshot)
+
+# Unmounting
+This method is called when a component is being removed from the DOM:
+
+componentWillUnmount()
+
+
+
+
+# Component vs. PureComponent
+PureComponent is exactly the same as Component except that it handles the shouldComponentUpdate method for you.
+
+When props or state changes, PureComponent will do a shallow comparison on both props and state. Component on the other hand won’t compare current props and state to next out of the box. Thus, the component will re-render by default whenever shouldComponentUpdate is called.
+
+Shallow Comparison
+When comparing previous props and state to next, a shallow comparison will check that primitives have the same value (eg, 1 equals 1 or that true equals true) and that the references are the same between more complex javascript values like objects and arrays.

@@ -20,3 +20,14 @@
         }
     ]
 }
+
+"env": {
+    "NODE_ENV": "development"
+}
+
+"args": [
+
+]
+"vmArgs": [
+    "-Dspring.config.location=classpath:/application.yml,classpath:/application-secret.yml"
+]

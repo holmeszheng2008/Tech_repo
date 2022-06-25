@@ -1,0 +1,35 @@
+React has some built-in typechecking abilities as PropTypes. But static type checkers like Flow and TypeScript are better.
+
+static propTypes (for validation) or defaultProps (for providing default props) can be used on:
+	function components 
+	class components
+	React.memo
+	React.forwardRef
+
+propTypes (for validation)
+defaultProps (for providing default props)
+
+
+# Gotcha: In a funciton component:
+
+export default function HelloWorldComponent({ name }) {
+  return (
+    <div>Hello, {name}</div>
+  )
+}
+	To add PropTypes, you may want to declare the component in a separate function before exporting, like this:
+
+import PropTypes from 'prop-types'
+
+function HelloWorldComponent({ name }) {
+  return (
+    <div>Hello, {name}</div>
+  )
+}
+
+HelloWorldComponent.propTypes = {
+  name: PropTypes.string
+}
+
+export default HelloWorldComponent
+

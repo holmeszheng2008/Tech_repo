@@ -1,0 +1,17 @@
+(1) JSON shorthand
+{firstName: firstName, lastName: lastName}
+	is equivalent to
+	 {firstName, lastName}
+
+(2) computed property names
+function [variable](){}
+
+let variable = "myKey";
+{[variable]: something} -> {myKey: something}
+	same as obj[variable]
+		equivalent to obj.myKey
+
+eg:
+let person = { firstName: '', email: '', age: '' }
+const name = e.target.name;
+setPerson({ ...person, [name]: value });

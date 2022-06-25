@@ -6,45 +6,42 @@ import java.util.Map;
 // 76. Minimum Window Substring
 public class Solution76 {
     public String minWindow(String s, String t) {
-        Map<Character, Integer> needs = new HashMap<>();
+        Map<Character, Integer> need = new HashMap<>();
         Map<Character, Integer> window = new HashMap<>();
-        char[] sArray = s.toCharArray();
         char[] tArray = t.toCharArray();
         for (char c : tArray) {
-            needs.put(c, needs.getOrDefault(c, 0) + 1);
+            need.put(c, need.getOrDefault(c, 0) + 1);
         }
-        int i = 0, j = 0;
-        int satisfied = 0;
-        int start = 0, len = Integer.MAX_VALUE;
-        while (j < sArray.length) {
-            char c = sArray[j];
-            j++;
-            if (needs.containsKey(c)) {
-                window.put(c, window.getOrDefault(c, 0) + 1);
-                if (window.get(c).equals(needs.get(c))) {
-                    satisfied++;
+        int left = 0, right = 0, valid = 0, length = Integer.MAX_VALUE;
+        int start = 0, end = 0;
+        while (right < s.length()) {
+            Character in = s.charAt(right);
+            right++;
+            if (need.get(in) != null) {
+                window.put(in, window.getOrDefault(in, 0) + 1);
+                if (window.get(in).equals(need.get(in))) {
+                    valid++;
                 }
             }
-            while (needs.size() == satisfied) {
-                if (len > j - i) {
-                    len = j - i;
-                    start = i;
+            while (valid == need.size()) {
+                int currentLength = right - left;
+                if (currentLength < length) {
+                    length = currentLength;
+                    start = left;
+                    end = right;
                 }
-                char d = sArray[i];
-                i++;
-                if (needs.containsKey(d)) {
-                    if (window.get(d).equals(needs.get(d))) {
-                        satisfied--;
+                Character out = s.charAt(left);
+                left++;
+                if (need.get(out) != null) {
+                    window.put(out, window.get(out) - 1);
+                    if (window.get(out).equals(need.get(out) - 1)) {
+                        valid--;
                     }
-                    window.put(d, window.get(d) - 1);
                 }
             }
         }
 
-        if (len == Integer.MAX_VALUE) {
-            return "";
-        }
-        return s.substring(start, start + len);
+        return s.substring(start, end);
     }
 }
 

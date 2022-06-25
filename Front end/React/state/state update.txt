@@ -1,0 +1,5 @@
+(1) When setSate is stacked and finally triggers the re-render, render() is called after that and component re-rendered.
+(2) The sate is merged.
+(3) In controlled components, the values of form elements are sync with form state. When setState called, the component is re-rendered and those form elements initialized using state. So we are not using HTML dom to controll respective states. The state in React is the only true source.
+(4) each state indivisually is immutable, if you want to modify, re-create another one with spread operator ... or stringify?
+(5) SyntheticEvent can't be saved in state. Pass constants needed inside syntheticEvent.

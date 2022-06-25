@@ -1,0 +1,19 @@
+    /*
+		Take root as height 0
+	/*
+	private int getMaxDepth(TreeNode root){
+        if (root == null){
+            return -1;
+        }
+        return 1 + Math.max(getMaxDepth(root.left), getMaxDepth(root.right));
+    }
+	
+	/*
+		Take root as height 1
+	/*
+	private int getMaxDepth(TreeNode root){
+        if (root == null){
+            return 0;
+        }
+        return 1 + Math.max(getMaxDepth(root.left), getMaxDepth(root.right));
+    }

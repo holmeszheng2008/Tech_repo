@@ -8,47 +8,33 @@ public class Solution1541 {
         char[] sArray = s.toCharArray();
         Stack<Character> stack = new Stack<>();
         int needs = 0;
-        for (int i = 0; i < sArray.length; i++) {
-            char element = sArray[i];
-            if (stack.isEmpty()) {
-                if (element == '(') {
-                    stack.push(element);
+        int length = s.length();
+
+        for (int i = 0; i < length; i++) {
+            char c = sArray[i];
+            if (c == '(') {
+                stack.push(c);
+            } else {
+                if (i == length - 1) {
+                    needs++;
                 } else {
                     i++;
-                    if (i >= sArray.length) {
-                        needs += 2;
+                    char cNext = sArray[i];
+                    if (cNext == ')') {
+
                     } else {
-                        char nextEle = sArray[i];
-                        if (nextEle == '(') {
-                            needs += 2;
-                            stack.push(nextEle);
-                        } else {
-                            needs += 1;
-                        }
+                        i--;
+                        needs++;
                     }
                 }
-                continue;
-            }
-            // top is always '('
-            if (element == '(') {
-                stack.push(element);
-            } else {
-                i++;
-                if (i >= sArray.length) {
-                    stack.pop();
-                    needs += 1;
+                if (stack.isEmpty()) {
+                    needs++;
                 } else {
-                    char nextEle = sArray[i];
-                    if (nextEle == '(') {
-                        needs += 1;
-                    } else {
-                        stack.pop();
-                    }
+                    stack.pop();
                 }
             }
         }
-        needs += stack.size() * 2;
 
-        return needs;
+        return needs + stack.size() * 2;
     }
 }

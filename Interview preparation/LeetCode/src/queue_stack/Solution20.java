@@ -5,23 +5,25 @@ import java.util.Stack;
 // 20. Valid Parentheses
 public class Solution20 {
     public boolean isValid(String s) {
-        char[] sArray = s.toCharArray();
         Stack<Character> stack = new Stack<>();
-        for (char c : sArray) {
+        char[] sArray = s.toCharArray();
+        for (int i = 0; i < sArray.length; i++) {
+            char c = sArray[i];
             if (c == '(' || c == '[' || c == '{') {
-               stack.push(c);
+                stack.push(c);
             } else {
                 if (stack.isEmpty()) {
                     return false;
                 }
-                Character top = stack.pop();
-                if ((c == ')' && top == '(') || (c == ']' && top == '[') || (c == '}' && top == '{')) {
-                    continue;
+                char out = stack.pop();
+                if ((c == ')' && out == '(') || (c == '}' && out == '{') || (c == ']' && out == '[')) {
+
                 } else {
                     return false;
                 }
             }
         }
+
         if (stack.isEmpty()) {
             return true;
         }

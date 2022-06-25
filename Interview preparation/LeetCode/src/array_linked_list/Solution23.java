@@ -21,22 +21,29 @@ public class Solution23 {
     }
 
     public ListNode mergeKLists(ListNode[] lists) {
-        ListNode head = new ListNode(0), p = head;
-        PriorityQueue<ListNode> pq = new PriorityQueue<>((ListNode o1, ListNode o2) -> o1.val - o2.val);
-        for (ListNode list : lists) {
-            while (list != null) {
-                pq.offer(list);
-                list = list.next;
+        if (lists == null || lists.length == 0) {
+            return null;
+        }
+        PriorityQueue<ListNode> pq = new PriorityQueue<>((ListNode o1, ListNode o2) -> {
+            return o1.val - o2.val;
+        });
+        ListNode dummyHead = new ListNode();
+        ListNode p = dummyHead;
+        for (ListNode head : lists) {
+            if (head != null) {
+                pq.add(head);
             }
         }
         while (!pq.isEmpty()) {
             ListNode node = pq.poll();
+            if (node.next != null) {
+                pq.add(node.next);
+            }
             p.next = node;
             p = p.next;
         }
-        p.next = null;
 
-        return head.next;
+        return dummyHead.next;
     }
 
     public ListNode mergeKLists_better(ListNode[] lists) {

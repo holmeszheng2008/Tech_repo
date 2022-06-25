@@ -1,0 +1,10 @@
+const refContainer = useRef(null);
+
+// this preserves the same reference in a stateful way
+// the refContainer returned is used to associate with DOM elements
+	eg:
+		<div>
+		  <input type="text" ref={refContainer} />
+		</div>
+
+// refContainer.current refers to the currently associated component

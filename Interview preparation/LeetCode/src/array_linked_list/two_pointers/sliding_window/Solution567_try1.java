@@ -5,52 +5,48 @@ import java.util.Map;
 
 public class Solution567_try1 {
     public boolean checkInclusion(String s1, String s2) {
-        Map<Character, Integer> needs = new HashMap<>();
-        Map<Character, Integer> window = new HashMap<>();
-        int validCounts = 0;
         char[] s1Array = s1.toCharArray();
-        char[] s2Array = s2.toCharArray();
-        for (char c : s1Array) {
-            needs.put(c, needs.getOrDefault(c, 0) + 1);
+        Map<Character, Integer> need = new HashMap<>();
+        for(char c : s1Array) {
+            need.put(c, need.getOrDefault(c, 0) + 1);
         }
-
-        int i = 0, j = 0;
-        while (j < s2Array.length) {
-            char c = s2Array[j];
-            j++;
-            if (needs.containsKey(c)) {
-                int count = window.getOrDefault(c, 0);
-                if (count < needs.get(c)) {
-                    window.put(c, count + 1);
-                    if (count + 1 == needs.get(c)) {
-                        validCounts++;
-                        if (validCounts == needs.size()) {
-                            return true;
+        
+        Map<Character, Integer> window = new HashMap<>();
+        int left = 0, right = 0, valid = 0;
+        
+        while (right < s2.length()) {
+            char in = s2.charAt(right);
+            right++;
+            if (need.containsKey(in)) {
+                window.put(in, window.getOrDefault(in, 0) + 1);
+                if (window.get(in).equals(need.get(in))) {
+                    valid++;
+                } else if (window.get(in).equals(need.get(in) + 1)) {
+                    valid--;
+                    while (true) {
+                        char out = s2.charAt(left);
+                        left++;
+                        window.put(out, window.get(out) - 1);
+                        if (window.get(out).equals(need.get(out) - 1)) {
+                            valid--;
                         }
-                    }
-                } else {
-                    window.put(c, count + 1);
-                    while (i < j) {
-                        char toRemove = s2Array[i];
-                        int currentCount = window.get(toRemove);
-                        if (currentCount == needs.get(toRemove)) {
-                            validCounts--;
-                        }
-                        window.put(toRemove, currentCount - 1);
-                        i++;
-                        if (toRemove == c) {
+                        if (out == in) {
+                            valid++;
                             break;
                         }
                     }
                 }
             } else {
-                i = j;
-                for (Character ch : window.keySet()) {
-                    window.put(ch, 0);
-                }
-                validCounts = 0;
+                window.clear();
+                left = right;
+                valid = 0;
+            }
+
+            if (valid == need.size()) {
+                return true;
             }
         }
+        
         return false;
     }
 }

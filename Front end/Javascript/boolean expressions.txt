@@ -1,0 +1,15 @@
+In javascript:
+	a && b doesn't have to return boolean
+		They just follow the short circuit rule and execute in that order
+	eg:
+		true && b
+			-> evaluates to b
+		false && b
+			-> evaluates to false
+	
+	a || b doesn't have to return boolean
+	eg:
+		true || b
+			-> evaluates to true
+		false || b
+			-> evaluates to b

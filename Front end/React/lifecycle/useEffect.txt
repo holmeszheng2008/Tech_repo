@@ -1,0 +1,47 @@
+// by default runs after every render, if the second parameter is undefined.
+  useEffect(() => {
+    console.log('call useEffect');
+    if (value > 0) {
+      document.title = `New Messages(${value})`;
+    }
+  });
+
+// second parameter
+  useEffect(() => {
+    console.log('call useEffect');
+    if (value > 0) {
+      document.title = `New Messages(${value})`;
+    }
+  }, []);
+  second parameter is the dependency list, after initial render, userEffect will run anyway.
+  [], will only be running on mounting and cleanup on unmounting
+  [value], other than mounting and unmounting, each time dependencies update, functions called on elements update.
+
+// You can have multiple useEffect functions, in the order the useEffect function is called.
+
+// cleanup function
+  useEffect(() => {
+    console.log('useEffect');		-> didMount/didUpdate
+    window.addEventListener('resize', checkSize);
+    return () => {	// returns the clean up callback function which is called based on the dependency list. -> didUpdate/willUnmount
+      console.log('cleanup');
+      window.removeEventListener('resize', checkSize);
+    };
+  });
+ 
+   useEffect(() => {
+    console.log("hello");
+    window.addEventListener('resize', checkSize);
+    return () => {
+      window.removeEventListener('resize', checkSize);
+    };
+  }, []);	// first part will be running on mounting and cleanup on unmounting.
+
+ // log
+ render
+ useEffect
+ render
+ cleanup
+ useEffect
+ 
+ ## If you run re-render(set***) inside useEffect, make sure that you have dependency list, otherwise you will get into infinite loop.

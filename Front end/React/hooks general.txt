@@ -1,0 +1,25 @@
+Hooks are a new addition in React 16.8. They let you use state and other React features without writing a class.
+
+1. named as use***
+2. function component name must be uppercase
+3. Only Call Hooks at the Top Level Don’t call Hooks inside loops, conditions, or nested functions. cannot call use*** conditionally, by following this, hooks are called in the same order each time a component renders.
+4. Don’t call Hooks from regular JavaScript functions. Instead, you can:
+	Call Hooks from React function components.
+	Call Hooks from custom Hooks
+		# can't be used in class components functions as they are regular Javascript functions.
+
+
+# hook types:
+useState	stateful
+useEffect	dependency list, when dependency list is [], will only act on mounting.
+useContext	stateful
+
+
+useReducer	stateful
+useCallback	stateful, dependency list
+useMemo		stateful, dependency list
+useRef		stateful
+
+useImperativeHandle
+useLayoutEffect
+useDebugValue

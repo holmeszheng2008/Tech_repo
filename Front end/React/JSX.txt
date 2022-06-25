@@ -1,0 +1,127 @@
+JSX is a react element which is a javascript object created from React component
+
+# React components:
+(1) class component
+(2) function component ( function, arrow )
+(3) React.memo()
+(4) React.forwardRef()
+
+# JSX Rules:
+## return a single element
+	div/ section/ article/ Fragment(shortcut is just <> </>)...
+##JSX equivalent attribute names are camelCase for html attribute
+	onclick -> onClick
+## className instead of "class", forHtml instead of "for"
+## close every element
+	eg: <img> </img>
+## formatting, the open tag has to be in the same line as "return". Or you may prefer to add parenthesis around JSX.
+	eg:
+	return (
+			<h1>
+				HELLO
+			</h1>
+		)
+## components must be defined capitalized. Though it can be assinged to a capitalized variable first and then used as a react component.
+	eg:
+	import React from 'react';
+	import { PhotoStory, VideoStory } from './stories';
+
+	const components = {
+	photo: PhotoStory,
+	video: VideoStory
+	};
+
+	function Story(props) {
+	// Correct! JSX type can be a capitalized variable.
+	const SpecificStory = components[props.storyType];
+	return <SpecificStory story={props.story} />;
+	}
+
+# JSX attributes:
+(1) reserved JSX attributes that don't show up in props
+## className: used as "class" in HTML
+## key: used for react components in an array
+## ref: ref={refVar} -> bind the reference of this component to refVar
+    reserved JSX attributes that show up in props
+##	children -> Represents whatever in between open and closing tags. This shows up in props.
+
+(2) All other JSX attributes and children are in props
+(3) In the form of either Javascript expression or string literal
+	eg:
+	<MyComponent message="hello world" />
+		equivalent to:
+	<MyComponent message={'hello world'} /> // {JS expression}, one-line js expression, literal, variable, etc
+(4) Props defulat to {true}
+	<MyTextBox autocomplete />
+		equivalent to:
+	<MyTextBox autocomplete={true} />
+(5) Spread attributes
+function App1() {
+  return <Greeting firstName="Ben" lastName="Hector" />;
+}
+function App2() {
+  const props = {firstName: 'Ben', lastName: 'Hector'};
+  return <Greeting {...props} />;
+}
+## Take care of those attributes that are not included in "props" like key, ref, etc
+
+
+# Children in JSX
+## String Literals
+	html unescaped, heading and trailing whitespaces, breaking lines are removed
+## nested JSX
+	<MyContainer>
+	  <MyFirstComponent />
+	  <MySecondComponent />
+	</MyContainer>
+## JavaScript Expressions
+	<MyComponent>foo</MyComponent>
+		equivalent to:
+	<MyComponent>{'foo'}</MyComponent>
+## Not common but it could be anything since children is just a property included in Props
+function Repeat(props) {
+  let items = [];
+  for (let i = 0; i < props.numTimes; i++) {
+    items.push(props.children(i));
+  }
+  return <div>{items}</div>;
+}
+
+function ListOfTenThings() {
+  return (
+    <Repeat numTimes={10}>
+      {(index) => <div key={index}>This is item {index} in the list</div>}
+    </Repeat>
+  );
+}
+
+## Children of Booleans, Null, and Undefined Are not rendered
+	<div>{true}</div>
+	<div>{false}</div>
+	<div>{null}</div>
+	<div>{undefined}</div>
+	eg:
+	<div>
+		{showHeader && <Header />}
+		<Content />
+	</div>
+
+		### note: One caveat is that some “falsy” values, such as the 0 number, are still rendered by React
+	eg:
+	<div>
+		{props.messages.length &&
+		<MessageList messages={props.messages} />
+		}
+	</div>
+		{0} will still be rendered. to fix this, make it a boolean value
+	<div>
+	  {props.messages.length > 0 &&
+		<MessageList messages={props.messages} />
+	  }
+	</div>
+
+	Conversely, if you want a value like false, true, null, or undefined to appear in the output, you have to convert it to a string first:
+
+	<div>
+	  My JavaScript variable is {String(myVariable)}.
+	</div>

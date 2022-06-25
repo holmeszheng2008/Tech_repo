@@ -1,0 +1,65 @@
+An alternative to useState. With useReducer You can have the state of this component all in one place and update once in dispatch. useReducer is usually preferable to useState when you have complex state logic that involves multiple sub-values or when the next state depends on the previous one. useReducer also lets you optimize performance for components that trigger deep updates because you can pass dispatch down instead of callbacks.
+
+# function prototype:
+## useReducer
+const [state, dispatch] = useReducer(reducer, initialArg);
+const [state, dispatch] = useReducer(reducer, initialArg, init);
+	init(initialArg) will generate the actual initialArg
+	
+## reducer
+(state, action: {}) => newState
+
+## dispatch
+dispatch(action object: {})
+calling dispatch will call reducer function passed in from useReducer and finally trigger re-redenr as set*** when using useState
+
+
+
+
+eg:
+function init(initialCount) {
+  return {count: initialCount};
+}
+
+function reducer(state, action) {
+  switch (action.type) {
+    case 'increment':
+      return {count: state.count + 1};
+    case 'decrement':
+      return {count: state.count - 1};
+    case 'reset':
+      return init(action.payload);
+    default:
+      throw new Error();
+  }
+}
+
+function Counter({initialCount}) {
+  const [state, dispatch] = useReducer(reducer, initialCount, init);
+  return (
+    <>
+      Count: {state.count}
+      <button
+        onClick={() => dispatch({type: 'reset', payload: initialCount})}>
+        Reset
+      </button>
+      <button onClick={() => dispatch({type: 'decrement'})}>-</button>
+      <button onClick={() => dispatch({type: 'increment'})}>+</button>
+    </>
+  );
+}
+
+# state used in reducer should be considered immutable. Don't do in-place modification
+function reducer(state, action) {
+  switch (action.type) {
+    // this will not work
+    case 'increment':
+      state.count = state.count + 1;
+      return state;
+    case 'decrement':
+      // this will work
+      return {...state, count: state.count+1}
+  }
+}
+
+# state isn't mergable, unlike setState() in a class-based component.

@@ -1,0 +1,67 @@
+# Method reference
+# Functional interface is actually an interface marked by @FunctionalInterface, which only has one instance fuction inside.
+If that is functional interface, you can assign it as lambda. If you also need other properties inside or it's not a functional interface, then still go with the old fashion (instantiate an annonymous class).
+
+They both are actually lambdas.
+To know if they could fit into each other, just consider them all as the "corresponding method signature".
+
+For example:
+
+(1) FunctionalInterface:
+@FunctionalInterface
+public interface BooleanSupplier {
+
+    /**
+     * Gets a result.
+     *
+     * @return a result
+     */
+    boolean getAsBoolean();
+}
+
+(2) Lambda
+	() -> {return true;}
+	() -> true;
+
+(3)
+public class Message {
+	public static boolean isMessage(){
+		return true;
+	}
+}
+Message::isMessage
+
+All three are equals to the method signature:
+	boolean ()
+
+# Method reference:
+
+(1) Class::static_method
+StringUtils::capitalize
+	is equivalent to:
+(String) -> String
+
+(2) object::instance_method
+new Integer(1)::compareTo
+	is equivalent to:
+(Integer) -> boolean
+
+(3) Class::instance_method
+Integer::compareTo
+	is equivalent to:
+(Integer, Integer) -> boolean
+	The first parameter will be the object "this" used for the instance_method. eg: the first Integer is "this"
+
+(4) Constructor method
+	Class:new
+	
+	eg:
+	class Message{
+		Message (String) {
+		
+		}
+	}
+
+Message::new
+	is equivalent to:
+(String) -> Message

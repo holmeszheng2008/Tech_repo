@@ -1,0 +1,3 @@
+let obj = {a:1, b:2, c:{one:1, two:2}}
+
+{a, b, c: {one, two}} = obj;

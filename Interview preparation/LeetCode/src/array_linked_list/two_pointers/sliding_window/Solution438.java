@@ -9,38 +9,49 @@ import java.util.Map;
 class Solution438 {
     public List<Integer> findAnagrams(String s, String p) {
         List<Integer> res = new ArrayList<>();
-        char[] sArray = s.toCharArray();
         char[] pArray = p.toCharArray();
-        Map<Character, Integer> window = new HashMap<>();
-        Map<Character, Integer> needs = new HashMap<>();
+        Map<Character, Integer> need = new HashMap<>();
         for (char c : pArray) {
-            needs.put(c, needs.getOrDefault(c, 0) + 1);
+            need.put(c, need.getOrDefault(c, 0) + 1);
         }
-        int i = 0, j = 0;
-        int validCounts = 0;
 
-        while (j < s.length()) {
-            char c = sArray[j];
-            j++;
-            if (needs.containsKey(c)) {
-                window.put(c, window.getOrDefault(c, 0) + 1);
-                if (window.get(c).equals(needs.get(c))) {
-                    validCounts++;
+        Map<Character, Integer> window = new HashMap<>();
+        int left = 0, right = 0, valid = 0;
+
+        while (right < s.length()) {
+            char in = s.charAt(right);
+            right++;
+            if (need.containsKey(in)) {
+                window.put(in, window.getOrDefault(in, 0) + 1);
+                if (window.get(in).equals(need.get(in))) {
+                    valid++;
+                } else if (window.get(in).equals(need.get(in) + 1)) {
+                    valid--;
+                    while (true) {
+                        char out = s.charAt(left);
+                        left++;
+                        window.put(out, window.get(out) - 1);
+                        if (window.get(out).equals(need.get(out) - 1)) {
+                            valid--;
+                        }
+                        if (out == in) {
+                            valid++;
+                            break;
+                        }
+                    }
                 }
+            } else {
+                window.clear();
+                left = right;
+                valid = 0;
             }
 
-            while (j - i == p.length()) {
-                if (validCounts == needs.size()) {
-                    res.add(i);
-                }
-                char d = sArray[i];
-                i++;
-                if (needs.containsKey(d)) {
-                    if (window.get(d).equals(needs.get(d))) {
-                        validCounts--;
-                    }
-                    window.put(d, window.get(d) - 1);
-                }
+            if (valid == need.size()) {
+                res.add(left);
+                valid--;
+                char out = s.charAt(left);
+                left++;
+                window.put(out, window.get(out) - 1);
             }
         }
 

@@ -5,27 +5,25 @@ import java.util.Stack;
 // 921. Minimum Add to Make Parentheses Valid
 public class Solution921 {
     public int minAddToMakeValid(String s) {
-        char[] sArray = s.toCharArray();
         Stack<Character> stack = new Stack<>();
+        char[] sArray = s.toCharArray();
         for (int i = 0; i < s.length(); i++) {
-            char element = sArray[i];
-            if (stack.isEmpty()) {
-                stack.push(element);
-                continue;
-            }
-            char top = stack.peek();
-            if (top == ')') {
-                stack.push(element);
-                continue;
+            char c = sArray[i];
+            if (c == '(') {
+                stack.push(c);
             } else {
-                if (element == '(') {
-                    stack.push(element);
+                if (stack.isEmpty()) {
+                    stack.push(c);
                 } else {
-                    stack.pop();
+                    char out = stack.peek();
+                    if (out == '(') {
+                        stack.pop();
+                    } else {
+                        stack.push(c);
+                    }
                 }
             }
         }
-
         return stack.size();
     }
 }

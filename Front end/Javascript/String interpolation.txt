@@ -1,0 +1,13 @@
+You can use the backticks `` and ES6 template string
+`my string ${VARIABLE}`	similar to bash scripting
+	in bash $(command ${variable})
+
+a less efficient way to accomplish this would be
+function format(str, ...params) {
+  for(const param of params)
+    str = str.replace("%", param);
+   return str;
+}
+which can be used with
+
+format("My % string", "interpolation")

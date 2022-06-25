@@ -1,0 +1,5 @@
+Authentication:
+	If the claimed user is actually himself. 
+Authorization (permissions):
+	In Spring Security, authority is synonymous to permission.
+	The permissions that a role of a user posesses. A user can have multiple roles.

@@ -1,0 +1,25 @@
+peek definition: ctrl + f12
+peek reference: ctrl + shift + f12
+
+previous editor tab: ctrl + page up
+
+next editor tab: ctrl + page down
+
+
+
+## side bar and editor:
+focus on side bar: ctrl + 0
+
+focus on editor: ctrl + 1
+
+File Explorer: ctrl shift e
+
+Search: ctrl shift f
+
+Source Control: ctrl shift g
+
+Debug: ctrl shift d
+
+Extensions: ctrl shift x
+
+toggle the visibility of the sidebar: ctrl b
