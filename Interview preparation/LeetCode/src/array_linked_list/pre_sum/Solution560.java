@@ -6,38 +6,18 @@ import java.util.Map;
 // 560. Subarray Sum Equals K
 // PreSum + 2Sum
 public class Solution560 {
-    int subarraySum(int[] nums, int k) {
-        int n = nums.length;
-        Map<Integer, Integer> preSumOccur = new HashMap<>();
-        int preSum = 0, res = 0;
-        preSumOccur.put(0, 1);
-        for (int i = 0; i < n; i++) {
-            preSum = preSum + nums[i];
-            int balance = preSum - k;
-            res += preSumOccur.getOrDefault(balance, 0);
-            preSumOccur.put(preSum, preSumOccur.getOrDefault(preSum, 0) + 1);
-        }
-
-        return res;
-    }
-}
-
-
-class Solution {
-    int subarraySum(int[] nums, int k) {
+    Map<Integer, Integer> map = new HashMap<>();
+    public int subarraySum(int[] nums, int k) {
         int res = 0;
-        int n = nums.length;
-        int[] preSum = new int[n + 1];
-        for (int i = 0; i < n; i++) {
+        int[] preSum = new int[nums.length + 1];
+        for (int i = 0; i < nums.length; i++) {
             preSum[i + 1] = preSum[i] + nums[i];
         }
-        // preSum[j] - preSum[i] = k
-        Map<Integer, Integer> preSumOccurMap = new HashMap<>();
-        preSumOccurMap.put(0, 1);
-        for (int i = 1; i < n + 1; i++) {
-            int second = preSum[i] - k;
-            res += preSumOccurMap.getOrDefault(second, 0);
-            preSumOccurMap.put(preSum[i], preSumOccurMap.getOrDefault(preSum[i], 0) + 1);
+        for (int i = 0; i < preSum.length; i++) {
+            int val = preSum[i];
+            int count = map.getOrDefault(val - k, 0);
+            res += count;
+            map.put(val, map.getOrDefault(val, 0) + 1);
         }
 
         return res;

@@ -1,5 +1,7 @@
 package array_linked_list.two_pointers.fast_slow_pointers;
 
+import util.ListNode;
+
 // 19. Remove Nth Node From End of List
 public class Solution19 {
     public ListNode removeNthFromEnd(ListNode head, int n) {
@@ -18,23 +20,5 @@ public class Solution19 {
         slow.next = slow.next.next;
 
         return head;
-    }
-}
-
-
-
-class ListNode {
-    int val;
-    ListNode next;
-
-    ListNode() {}
-
-    ListNode(int val) {
-        this.val = val;
-    }
-
-    ListNode(int val, ListNode next) {
-        this.val = val;
-        this.next = next;
     }
 }

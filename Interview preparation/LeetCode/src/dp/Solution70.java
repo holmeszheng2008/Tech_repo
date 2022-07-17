@@ -11,16 +11,19 @@ public class Solution70 {
     }
 
     private int dp(int n) {
-        if (n == 0) {
+        if (n < 0) {
             return 0;
         }
-        if (n == 1) {
+        if (n == 0 || n == 1) {
             return 1;
         }
         if (memo[n] != null) {
             return memo[n];
         }
 
-        return 2 + dp(n - 1) + dp(n - 2);
+        int num = dp(n - 1) + dp(n - 2);
+        memo[n] = num;
+
+        return num;
     }
 }

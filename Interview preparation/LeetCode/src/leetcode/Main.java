@@ -1,13 +1,16 @@
 package leetcode;
 
-import data_structure_design_to_satisfy.Solution772;
+import binary_tree.divide_and_conquer.Solution508;
+import util.TreeNode;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        Solution772 instance = new Solution772();
-        instance.calculate(" 2-1 + 2 ");
-        System.out.println("hello");
+        Solution508 instance = new Solution508();
+        TreeNode root = new TreeNode(5);
+        root.left = new TreeNode(2);
+        root.right = new TreeNode(-3);
+        instance.findFrequentTreeSum(root);
     }
 }

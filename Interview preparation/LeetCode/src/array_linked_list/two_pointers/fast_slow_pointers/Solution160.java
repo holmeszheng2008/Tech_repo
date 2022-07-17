@@ -1,17 +1,9 @@
 package array_linked_list.two_pointers.fast_slow_pointers;
 
+import util.ListNode;
+
 // 160. Intersection of Two Linked Lists
 public class Solution160 {
-    public class ListNode {
-        int val;
-        ListNode next;
-
-        ListNode(int x) {
-            val = x;
-            next = null;
-        }
-    }
-
     public class Solution {
         public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
             int l1 = 0, l2 = 0;

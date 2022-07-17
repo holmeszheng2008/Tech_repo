@@ -1,23 +1,9 @@
 package array_linked_list;
 
+import util.ListNode;
+
 // 92. Reverse Linked List II
 public class Solution92_star {
-
-    public static class ListNode {
-        int val;
-        ListNode next;
-
-        ListNode() {}
-
-        ListNode(int val) {
-            this.val = val;
-        }
-
-        ListNode(int val, ListNode next) {
-            this.val = val;
-            this.next = next;
-        }
-    }
 
     public ListNode reverseBetween_bk(ListNode head, int left, int right) {
         if (left == right) {

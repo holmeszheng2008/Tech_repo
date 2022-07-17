@@ -1,25 +1,10 @@
 package array_linked_list;
 
 import java.util.PriorityQueue;
+import util.ListNode;
 
 // 23. Merge k Sorted Lists
 public class Solution23 {
-    public class ListNode {
-        int val;
-        ListNode next;
-
-        ListNode() {}
-
-        ListNode(int val) {
-            this.val = val;
-        }
-
-        ListNode(int val, ListNode next) {
-            this.val = val;
-            this.next = next;
-        }
-    }
-
     public ListNode mergeKLists(ListNode[] lists) {
         if (lists == null || lists.length == 0) {
             return null;

@@ -1,17 +1,9 @@
 package array_linked_list.two_pointers.fast_slow_pointers;
 
+import util.ListNode;
+
 // 142. Linked List Cycle II
 public class Solution142 {
-
-    class ListNode {
-        int val;
-        ListNode next;
-
-        ListNode(int x) {
-            val = x;
-            next = null;
-        }
-    }
 
     public ListNode detectCycle(ListNode head) {
         boolean hasCycle = false;
