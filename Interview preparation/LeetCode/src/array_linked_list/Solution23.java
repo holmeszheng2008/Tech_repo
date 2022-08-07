@@ -6,26 +6,24 @@ import util.ListNode;
 // 23. Merge k Sorted Lists
 public class Solution23 {
     public ListNode mergeKLists(ListNode[] lists) {
+        ListNode dummyHead = new ListNode();
+        ListNode p = dummyHead;
         if (lists == null || lists.length == 0) {
             return null;
         }
-        PriorityQueue<ListNode> pq = new PriorityQueue<>((ListNode o1, ListNode o2) -> {
-            return o1.val - o2.val;
-        });
-        ListNode dummyHead = new ListNode();
-        ListNode p = dummyHead;
-        for (ListNode head : lists) {
-            if (head != null) {
-                pq.add(head);
+        PriorityQueue<ListNode> pq = new PriorityQueue<>((o1, o2) -> (o1.val - o2.val));
+        for (ListNode node : lists) {
+            if (node != null) {
+                pq.add(node);
             }
         }
         while (!pq.isEmpty()) {
             ListNode node = pq.poll();
+            p.next = node;
+            p = p.next;
             if (node.next != null) {
                 pq.add(node.next);
             }
-            p.next = node;
-            p = p.next;
         }
 
         return dummyHead.next;
