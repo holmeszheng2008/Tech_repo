@@ -1,12 +1,12 @@
 package leetcode;
 
-import backtracking.Solution51;
+import dp.Solution322;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        Solution51 instance = new Solution51();
-        instance.solveNQueens(4);
+        Solution322 instance = new Solution322();
+        instance.coinChange(new int[] {1, 3, 5}, 7);
     }
 }
