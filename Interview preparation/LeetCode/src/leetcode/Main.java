@@ -1,12 +1,12 @@
 package leetcode;
 
-import dp.Solution322;
+import dp.Solution486;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        Solution322 instance = new Solution322();
-        instance.coinChange(new int[] {1, 3, 5}, 7);
+        Solution486 instance = new Solution486();
+        instance.PredictTheWinner(new int[] {1, 5, 2});
     }
 }

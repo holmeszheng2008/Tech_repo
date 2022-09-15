@@ -23,3 +23,26 @@ public class Solution1448 {
         traverse(root.right, pathMax);
     }
 }
+
+
+class Solution1448_temp {
+    private int res;
+    public int goodNodes(TreeNode root) {
+        dfs(root, Integer.MIN_VALUE);
+
+        return res;
+    }
+
+    private void dfs(TreeNode root, int max) {
+        if (root == null) {
+            return;
+        }
+        if (max <= root.val) {
+            res++;
+            max = root.val;
+        }
+
+        dfs(root.left, max);
+        dfs(root.right, max);
+    }
+}
