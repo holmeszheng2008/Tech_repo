@@ -81,3 +81,78 @@ class Solution416_bu {
         return dp[nums.length][target];
     }
 }
+
+class Solution416_attempt1 {
+    Boolean[][] memo;
+    int[] nums;
+    public boolean canPartition(int[] nums) {
+        int sum = 0;
+        for (int num : nums) {
+            sum += num;
+        }
+        if (sum % 2 != 0){
+            return false;
+        }
+
+        this.nums = nums;
+        int target = sum/2;
+        this.memo = new Boolean[nums.length][target+1];
+
+        return dp(nums.length - 1, target);
+    }
+
+    private boolean dp(int i, int remain){
+        if(remain == 0){
+            return true;
+        }
+        if(i == -1){
+            return false;
+        }
+
+        if(memo[i][remain] != null) {
+            return memo[i][remain];
+        }
+
+        boolean res;
+
+        if(remain - nums[i] < 0){
+            res = dp(i-1, remain);
+        } else {
+            res = dp(i-1, remain) || dp(i-1, remain - nums[i]);
+        }
+
+        memo[i][remain] = res;
+        return res;
+    }
+}
+
+class Solution416_attempt1_bu {
+    public boolean canPartition(int[] nums) {
+        int sum = 0;
+        for (int num : nums) {
+            sum += num;
+        }
+        if (sum % 2 != 0){
+            return false;
+        }
+
+        int target = sum/2;
+        boolean[][] dp = new boolean[nums.length + 1][target+1];
+
+        for(int i =0; i < dp.length; i++){
+            dp[i][0] = true;
+        }
+        for(int i =1; i < dp.length; i++) {
+            for(int j = 1; j < dp[0].length; j++){
+                int num = nums[i-1];
+                if(j - num >= 0){
+                    dp[i][j] = dp[i-1][j] || dp[i-1][j-num];
+                } else {
+                    dp[i][j] = dp[i-1][j];
+                }
+            }
+        }
+
+        return dp[nums.length][target];
+    }
+}

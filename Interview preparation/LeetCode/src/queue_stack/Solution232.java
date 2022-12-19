@@ -45,5 +45,47 @@ public class Solution232 {
             }
         }
     }
+}
 
+class Solution232_attempt1 {
+    private class MyQueue {
+        private Stack<Integer> stack1;
+        private Stack<Integer> stack2;
+
+        public MyQueue() {
+            this.stack1 = new Stack<>();
+            this.stack2 = new Stack<>();
+        }
+
+        public void push(int x) {
+            stack2.push(x);
+        }
+
+        public int pop() {
+            if(stack1.empty()){
+                flush();
+            }
+            return stack1.pop();
+        }
+
+        public int peek() {
+            if(stack1.empty()){
+                flush();
+            }
+            return stack1.peek();
+        }
+
+        public boolean empty() {
+            if(stack1.empty() && stack2.empty()){
+                return true;
+            }
+            return false;
+        }
+
+        private void flush(){
+            while(!stack2.isEmpty()) {
+                stack1.push(stack2.pop());
+            }
+        }
+    }
 }

@@ -153,3 +153,45 @@ class way2_2 {
         return dp[coins.length][amount] == Integer.MAX_VALUE ? -1 : dp[coins.length][amount];
     }
 }
+
+class Solution322_attempt1 {
+    int[] coins;
+    //Map<Pair<Integer, Integer>, Integer> memo = new HashMap<>();
+    Integer[][] memo;
+    public int coinChange(int[] coins, int amount) {
+        this.coins = coins;
+        this.memo = new Integer[coins.length][amount+1];
+
+        int res = dp(0, amount);
+        return (res == Integer.MAX_VALUE) ? -1 : res;
+    }
+
+    private int dp(int i, int remain){
+        if(remain == 0) {
+            return 0;
+        }
+        if(i == coins.length){
+            return Integer.MAX_VALUE;
+        }
+
+        if(memo[i][remain] != null){
+            return memo[i][remain];
+        }
+        int res = Integer.MAX_VALUE;
+        for(int num = 0; ; num++){
+            long newRemain = remain - coins[i] * num *1l;
+            if(newRemain < 0){
+                break;
+            }
+
+            int temp = dp(i + 1, (int)newRemain);
+            if(temp != Integer.MAX_VALUE){
+                temp += num;
+            }
+            res = Math.min(res, temp);
+        }
+
+        memo[i][remain] = res;
+        return res;
+    }
+}

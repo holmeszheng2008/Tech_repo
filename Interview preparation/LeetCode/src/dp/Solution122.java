@@ -52,3 +52,57 @@ class Solution122_td {
         return res;
     }
 }
+
+class Solution122_attempt1 {
+    int[] prices;
+    Integer[][] memo;
+
+    public int maxProfit(int[] prices) {
+        this.prices = prices;
+        this.memo = new Integer[prices.length][2];
+        return dp(prices.length - 1, 0);
+    }
+
+    // 1 hold
+    // 0 not hold
+    private int dp(int i, int hold){
+        if (i == 0){
+            if (hold == 0){
+                return 0;
+            } else {
+                return -prices[0];
+            }
+        }
+        if (memo[i][hold] != null){
+            return memo[i][hold];
+        }
+        int profit;
+        int choice1 = dp(i-1, hold);
+        int choice2 = 0;
+        if (hold == 1) {
+            choice2 = dp(i-1, 0) - prices[i];
+        } else if (hold == 0){
+            choice2 = dp(i-1, 1) + prices[i];
+        }
+
+        profit = Math.max(choice1, choice2);
+        memo[i][hold] = profit;
+        return profit;
+    }
+}
+
+
+class Solution122_attempt1_bu {
+    int[][] dp;
+    public int maxProfit(int[] prices) {
+        this.dp = new int[prices.length][2];
+        dp[0][0] = 0;
+        dp[0][1] = -prices[0];
+        for(int i = 1; i < prices.length; i++){
+            dp[i][0] = Math.max(dp[i-1][0], dp[i-1][1] + prices[i]);
+            dp[i][1] = Math.max(dp[i-1][1], dp[i-1][0] - prices[i]);
+        }
+
+        return Math.max(dp[prices.length-1][0], dp[prices.length-1][1]);
+    }
+}

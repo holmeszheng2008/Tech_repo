@@ -57,3 +57,40 @@ class Solution518_bu {
         return dp[coins.length][amount];
     }
 }
+
+
+class Solution518_attempt1 {
+    int[] coins;
+    Integer[][] memo;
+    public int change(int amount, int[] coins) {
+        this.coins = coins;
+        this.memo = new Integer[amount + 1][coins.length];
+
+        return dp(amount, 0);
+    }
+
+    private int dp(int remain, int i){
+        if (remain == 0){
+            return 1;
+        }
+        if(i == coins.length){
+            return 0;
+        }
+
+        if(memo[remain][i] != null){
+            return memo[remain][i];
+        }
+        int res = 0;
+        for(int num = 0; ;num++){
+            int newRemain = remain - num * coins[i];
+            if(newRemain < 0){
+                break;
+            }
+
+            res += dp(newRemain, i+1);
+        }
+
+        memo[remain][i] = res;
+        return res;
+    }
+}

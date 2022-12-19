@@ -25,3 +25,27 @@ public class Solution739 {
         return res;
     }
 }
+
+class Solution739_attempt1 {
+    public int[] dailyTemperatures(int[] temperatures) {
+        Stack<int[]> stack = new Stack<>();
+        int[] res = new int[temperatures.length];
+        for(int i = 0; i < temperatures.length; i++){
+            int temperature = temperatures[i];
+            while(!stack.isEmpty()) {
+                int[] topPair = stack.peek();
+                if(topPair[1] >= temperature) {
+                    stack.push(new int[]{i, temperature});
+                    break;
+                } else {
+                    stack.pop();
+                    res[topPair[0]] = i - topPair[0];
+                }
+            }
+
+            stack.push(new int[]{i, temperature});
+        }
+
+        return res;
+    }
+}

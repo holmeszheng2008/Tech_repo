@@ -1,5 +1,6 @@
 package array_linked_list.sort;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -66,6 +67,80 @@ public class Solution315 {
                 numsPair[k] = temp[i++];
             } else {
                 numsPair[k] = temp[j++];
+            }
+        }
+    }
+}
+
+class Solution_attempt1 {
+    private class Pair {
+        public Pair(int index, int value){
+            this.index = index;
+            this.value = value;
+            this.count = 0;
+        }
+        public int index;
+        public int value;
+        public int count;
+    }
+
+    private Pair[] temp;
+    private Pair[] list;
+
+    public List<Integer> countSmaller(int[] nums) {
+        int[] res = new int[nums.length];
+
+        temp = new Pair[nums.length];
+        list = new Pair[nums.length];
+        for(int i = 0; i < nums.length; i++){
+            Pair pair = new Pair(i, nums[i]);
+            list[i] = pair;
+        }
+
+        mergeSort(0, nums.length - 1);
+
+        for(Pair pair : list){
+            res[pair.index] = pair.count;
+        }
+
+        return Arrays.stream(res).boxed().toList();
+    }
+
+    private void mergeSort(int low, int high){
+        if (low == high){
+            return;
+        }
+        int mid = low + (high - low) / 2;
+        mergeSort(low, mid);
+        mergeSort(mid+1, high);
+
+        merge(low, mid, high);
+    }
+
+    private void merge(int low, int mid, int high){
+        int checkP = mid+1;
+        for(int i = low; i <= mid; i++){
+            for(; checkP <= high; checkP++){
+                if(list[i].value <= list[checkP].value){
+                    break;
+                }
+            }
+            list[i].count += (checkP - mid - 1);
+        }
+        for(int i = low; i <= high; i++){
+            temp[i] = list[i];
+        }
+        for(int i = low, j = low, k = mid+1; i<= high; i++){
+            if (j == mid + 1){
+                list[i] = temp[k++];
+            } else if ( k == high + 1) {
+                list[i] = temp[j++];
+            } else {
+                if (temp[j].value <= temp[k].value){
+                    list[i] = temp[j++];
+                } else {
+                    list[i] = temp[k++];
+                }
             }
         }
     }
