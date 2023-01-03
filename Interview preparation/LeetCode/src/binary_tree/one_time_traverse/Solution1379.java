@@ -28,3 +28,27 @@ public class Solution1379 {
         traverse(original.right, cloned.right, target);
     }
 }
+
+class Solution1379_attempt1 {
+    private TreeNode res;
+    public final TreeNode getTargetCopy(final TreeNode original, final TreeNode cloned, final TreeNode target) {
+        dfs(original, cloned, target);
+
+        return res;
+    }
+    private void dfs(final TreeNode original, final TreeNode cloned, final TreeNode target) {
+        if(original == null){
+            return;
+        }
+        if(original == target){
+            res = cloned;
+            return;
+        }
+
+        dfs(original.left, cloned.left, target);
+        if(res != null){
+            return;
+        }
+        dfs(original.right, cloned.right, target);
+    }
+}

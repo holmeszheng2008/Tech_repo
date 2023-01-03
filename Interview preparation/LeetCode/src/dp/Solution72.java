@@ -79,3 +79,68 @@ class Solution72_bu {
         return dp[m][n];
     }
 }
+
+class Solution72_attempt1 {
+    private String word1;
+    private String word2;
+    Integer[][] memo;
+    public int minDistance(String word1, String word2) {
+        this.word1 = word1;
+        this.word2 = word2;
+        this.memo = new Integer[word1.length()][word2.length()];
+
+        return dp(word1.length() - 1, word2.length() - 1);
+    }
+
+    private int dp(int i, int j){
+        if(i == -1){
+            return j+1;
+        }
+        if(j == -1){
+            return i + 1;
+        }
+
+        if(memo[i][j] != null){
+            return memo[i][j];
+        }
+
+        int charI = word1.charAt(i);
+        int charJ = word2.charAt(j);
+        int res = 0;
+        if (charI == charJ) {
+            res = dp(i - 1, j - 1);
+        } else {
+            int tempRes = Math.min(dp(i-1, j-1), Math.min(dp(i, j-1), dp(i-1, j)));
+            res = tempRes + 1;
+        }
+
+        memo[i][j] = res;
+        return res;
+    }
+}
+
+class Solution72_attempt1_bu {
+    public int minDistance(String word1, String word2) {
+        int[][] dp = new int[word1.length() + 1][word2.length() + 1];
+        for(int i = 0; i < dp.length; i++){
+            dp[i][0] = i;
+        }
+        for(int j = 0; j < dp[0].length; j++){
+            dp[0][j] = j;
+        }
+
+        for(int i = 1; i < dp.length; i++){
+            for(int j = 1; j < dp[0].length; j++){
+                int charI = word1.charAt(i-1);
+                int charJ = word2.charAt(j-1);
+                if(charI == charJ){
+                    dp[i][j] = dp[i-1][j-1];
+                } else {
+                    dp[i][j] = 1 + Math.min(Math.min(dp[i-1][j-1], dp[i][j-1]), dp[i-1][j]);
+                }
+            }
+        }
+
+        return dp[word1.length()][word2.length()];
+    }
+}

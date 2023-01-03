@@ -27,3 +27,24 @@ public class Solution921 {
         return stack.size();
     }
 }
+
+class Solution921_attempt1 {
+    public int minAddToMakeValid(String s) {
+        int res = 0;
+        Stack<Integer> stack = new Stack<>();
+        for(int i = 0; i < s.length(); i++){
+            if(s.charAt(i) == '('){
+                stack.push(i);
+            } else {
+                if(stack.isEmpty()) {
+                    res++;
+                } else {
+                    stack.pop();
+                }
+            }
+        }
+
+        res += stack.size();
+        return res;
+    }
+}

@@ -37,3 +37,30 @@ public class Solution56 {
         // return res.stream().toArray(int[][]::new);
     }
 }
+
+class Solution56_attempt1{
+    public int[][] merge(int[][] intervals) {
+        List<int[]> res = new ArrayList<>();
+        Arrays.sort(intervals, (o1, o2) -> {
+            if(o1[0] != o2[0]){
+                return o1[0] - o2[0];
+            }
+            return o2[1] - o2[1];
+        });
+
+        int start = intervals[0][0], end = intervals[0][1];
+        for(int i = 0; i < intervals.length; i++){
+            int[] interval = intervals[i];
+            if(interval[0] > end) {
+                res.add(new int[]{start, end});
+                start = interval[0];
+                end = interval[1];
+            } else {
+                end = Math.max(end, interval[1]);
+            }
+        }
+
+        res.add(new int[]{start, end});
+        return res.stream().toArray(int[][]::new);
+    }
+}

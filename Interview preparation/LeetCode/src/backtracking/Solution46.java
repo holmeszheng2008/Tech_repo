@@ -1,36 +1,36 @@
 package backtracking;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 // 46. Permutations
 public class Solution46 {
     private List<List<Integer>> res = new ArrayList<>();
+    private Set<Integer> used = new HashSet<>();
+    private LinkedList<Integer> path = new LinkedList<>();
+    private int[] nums;
     public List<List<Integer>> permute(int[] nums) {
-        boolean[] used = new boolean[nums.length];
-        permute(new LinkedList<>(), nums, used);
+        this.nums = nums;
+        backtracking();
 
         return res;
     }
 
-    private void permute(LinkedList<Integer> path, int[] nums, boolean[] used) {
-        if (path.size() == nums.length) {
-            return;
-        }
-        
-        for (int i = 0; i < nums.length; i++) {
-            if (used[i]) {
+    private void backtracking(){
+        for(int num : nums){
+            if(used.contains(num)){
                 continue;
             }
-            path.add(nums[i]);
-            used[i] = true;
-            if (path.size() == nums.length) {
+            path.add(num);
+            used.add(num);
+
+            if(path.size() == nums.length){
                 res.add(new ArrayList<>(path));
+            } else {
+                backtracking();
             }
-            permute(path, nums, used);
+
             path.removeLast();
-            used[i] = false;
+            used.remove(num);
         }
     }
 }

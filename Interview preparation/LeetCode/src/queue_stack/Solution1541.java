@@ -38,3 +38,40 @@ public class Solution1541 {
         return needs + stack.size() * 2;
     }
 }
+
+class Solution1541_attempt1 {
+    public int minInsertions(String s) {
+        Stack<Integer> stack = new Stack<>();
+        int res = 0;
+        for(int i = 0; i < s.length();) {
+            char c = s.charAt(i);
+            if (c == '('){
+                stack.push(i);
+                i++;
+            } else {
+                if(i == s.length() - 1){
+                    res++;
+                    i++;
+                } else {
+                    char nextC = s.charAt(i+1);
+                    if(nextC == ')'){
+                        i+=2;
+                    } else {
+                        i+=1;
+                        res++;
+                    }
+                }
+
+                if(stack.isEmpty()){
+                    res++;
+                } else {
+                    stack.pop();
+                }
+            }
+        }
+
+        res += 2 * stack.size();
+
+        return res;
+    }
+}
