@@ -34,3 +34,37 @@ public class Solution46 {
         }
     }
 }
+
+class Solution46_attempt1 {
+    private Set<Integer> set = new HashSet<>();
+    private List<Integer> path = new ArrayList<>();
+    private List<List<Integer>> res = new ArrayList<>();
+    private int[] nums;
+    public List<List<Integer>> permute(int[] nums) {
+        this.nums = nums;
+
+        backtracking();
+
+        return res;
+    }
+
+    private void backtracking(){
+        for(int i = 0; i < nums.length; i++){
+            int num = nums[i];
+            if(set.contains(num)){
+                continue;
+            }
+            set.add(num);
+            path.add(num);
+
+            if(path.size() == nums.length){
+                res.add(new ArrayList<>(path));
+            } else {
+                backtracking();
+            }
+
+            set.remove(num);
+            path.remove(path.size()-1);
+        }
+    }
+}

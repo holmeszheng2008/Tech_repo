@@ -1,8 +1,9 @@
 package binary_tree.construct;
 
+import util.TreeNode;
+
 import java.util.LinkedList;
 import java.util.Queue;
-import util.TreeNode;
 
 
 public class Solution297 {

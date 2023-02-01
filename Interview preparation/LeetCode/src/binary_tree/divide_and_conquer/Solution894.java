@@ -1,10 +1,11 @@
 package binary_tree.divide_and_conquer;
 
+import util.TreeNode;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import util.TreeNode;
 
 public class Solution894 {
     private Map<Integer, List<TreeNode>> memo = new HashMap<>();

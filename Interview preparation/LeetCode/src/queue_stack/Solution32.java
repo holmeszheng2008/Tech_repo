@@ -30,3 +30,34 @@ public class Solution32 {
         return res;
     }
 }
+
+
+class Solution32_attempt1 {
+    public int longestValidParentheses(String s) {
+        int[] memo = new int[s.length()];
+        int res = 0;
+        Stack<Integer> stack = new Stack<>();
+        for(int i = 0; i < s.length(); i++){
+            char c = s.charAt(i);
+            if(c == '('){
+                stack.add(i);
+                memo[i] = 0;
+            } else {
+                if(stack.isEmpty()){
+                    memo[i] = 0;
+                } else {
+                    int left = stack.pop();
+                    int size = i + 1 - left;
+                    if(left == 0) {
+                        memo[i] = size;
+                    } else {
+                        memo[i] = size + memo[left - 1];
+                    }
+                    res = Math.max(res, memo[i]);
+                }
+            }
+        }
+
+        return res;
+    }
+}

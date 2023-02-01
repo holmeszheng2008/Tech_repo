@@ -1,8 +1,9 @@
 package binary_tree.bfs;
 
+import util.TreeNode;
+
 import java.util.LinkedList;
 import java.util.Queue;
-import util.TreeNode;
 
 // 623. Add One Row to Tree
 public class Solution623 {

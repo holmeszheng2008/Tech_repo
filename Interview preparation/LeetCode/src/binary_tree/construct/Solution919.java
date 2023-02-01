@@ -1,10 +1,11 @@
 package binary_tree.construct;
 
+import util.TreeNode;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
-import util.TreeNode;
 
 // 919. Complete Binary Tree Inserter
 public class Solution919 {

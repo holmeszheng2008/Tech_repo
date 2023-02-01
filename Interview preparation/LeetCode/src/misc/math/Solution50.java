@@ -38,3 +38,41 @@ public class Solution50 {
         return res;
     }
 }
+
+class Solution50_attempt1 {
+    public double myPow(double x, int n) {
+        if(x == 0 && n < 0){
+            return -1;
+        }
+
+        if(n < 0){
+            x = 1/x;
+            if(n == Integer.MIN_VALUE){
+                n = Integer.MAX_VALUE;
+                return x * doPow(x, n);
+            }
+            n = -n;
+            return doPow(x, n);
+        }
+
+        return doPow(x, n);
+    }
+
+    // n >= 0
+    private double doPow(double x, int n){
+        if(n == 0){
+            return 1;
+        }
+        if(n == 1){
+            return x;
+        }
+        if(n == 2){
+            return x * x;
+        }
+        if(n % 2 == 0){
+            return doPow(doPow(x, n/2), 2);
+        } else {
+            return doPow(x, n-1) * x;
+        }
+    }
+}

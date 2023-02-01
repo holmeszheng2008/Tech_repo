@@ -33,3 +33,32 @@ public class Solution77 {
         }
     }
 }
+
+
+class Solution77_attempt1 {
+    private LinkedList<Integer> path = new LinkedList<>();
+    private List<List<Integer>> res = new ArrayList<>();
+
+    public List<List<Integer>> combine(int n, int k) {
+        backtracking(1, n, k);
+
+        return res;
+    }
+
+    private void backtracking(int start, int n, int k){
+        for(int i = start; i <= n; i++){
+            if(n+1 - i + path.size() < k){
+                break;
+            }
+
+            path.add(i);
+            if(path.size() == k){
+                res.add(new ArrayList<>(path));
+            } else {
+                backtracking(i+1, n, k);
+            }
+
+            path.removeLast();
+        }
+    }
+}

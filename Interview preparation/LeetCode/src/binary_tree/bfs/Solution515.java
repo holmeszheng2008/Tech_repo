@@ -1,10 +1,11 @@
 package binary_tree.bfs;
 
+import util.TreeNode;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import util.TreeNode;
 
 // 515. Find Largest Value in Each Tree Row
 public class Solution515 {

@@ -1,7 +1,8 @@
 package binary_tree.one_time_traverse;
 
-import java.util.LinkedList;
 import util.TreeNode;
+
+import java.util.LinkedList;
 
 // 1261. Find Elements in a Contaminated Binary Tree
 public class Solution1261 {

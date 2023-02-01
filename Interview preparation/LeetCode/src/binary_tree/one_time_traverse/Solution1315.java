@@ -1,8 +1,9 @@
 package binary_tree.one_time_traverse;
 
+import util.TreeNode;
+
 import java.util.LinkedList;
 import java.util.Queue;
-import util.TreeNode;
 
 // 1315. Sum of Nodes with Even-Valued Grandparent
 public class Solution1315 {

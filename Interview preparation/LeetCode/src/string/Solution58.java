@@ -18,3 +18,10 @@ public class Solution58 {
         return lastSpaceIndex - letterIndex;
     }
 }
+
+class Solution58_attempt1 {
+    public int lengthOfLastWord(String s) {
+        String[] sArray = s.trim().split(" ");
+        return sArray[sArray.length - 1].length();
+    }
+}

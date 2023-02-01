@@ -1,13 +1,15 @@
 package leetcode;
 
-import array_linked_list.two_pointers.left_right_pointers.Solution41;
+import dp.Solution1626;
 
 public class Main {
 
+
+
     public static void main(String[] args) {
-
-        Solution41 inst = new Solution41();
-        inst.firstMissingPositive(new int[]{3,4,-1,1});
-
+        Solution1626 inst = new Solution1626();
+        inst.bestTeamScore(new int[]{1,3,7,3,2,4,10,7,5}, new int[]{
+                4,5,2,1,1,2,4,1,4
+        });
     }
 }

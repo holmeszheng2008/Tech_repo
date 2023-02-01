@@ -1,10 +1,11 @@
 package binary_tree.divide_and_conquer;
 
+import util.TreeNode;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import util.TreeNode;
 
 // 652. Find Duplicate Subtrees
 public class Solution652 {

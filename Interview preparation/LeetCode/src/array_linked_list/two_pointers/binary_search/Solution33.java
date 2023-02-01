@@ -52,3 +52,58 @@ public class Solution33 {
         return -1;
     }
 }
+
+
+class Solution33_attempt1 {
+    public int search(int[] nums, int target) {
+        int leftMin = nums[0], rightMax = nums[nums.length - 1];
+        if(leftMin <= rightMax){
+            int left = 0, right = nums.length - 1;
+            while(left <= right) {
+                int middle = left + (right- left) / 2;
+                if(nums[middle] == target){
+                    return middle;
+                } else if (nums[middle] < target){
+                    left = middle + 1;
+                } else if (nums[middle] > target){
+                    right = middle - 1;
+                }
+            }
+
+            return -1;
+        }
+
+        int left = 0, right = nums.length - 1;
+        while(left <= right){
+            int middle = left + (right - left) / 2;
+            int value = nums[middle];
+            if(value >= leftMin){
+                if(target == value){
+                    return middle;
+                } else if (target > value){
+                    left = middle + 1;
+                } else if (target < value){
+                    if(target >= leftMin) {
+                        right = middle - 1;
+                    } else {
+                        left = middle + 1;
+                    }
+                }
+            } else if (value <= rightMax){
+                if(target == value) {
+                    return middle;
+                } else if (target > value){
+                    if(target <= rightMax){
+                        left = middle + 1;
+                    } else {
+                        right = middle - 1;
+                    }
+                } else if (target < value){
+                    right = middle - 1;
+                }
+            }
+        }
+
+        return -1;
+    }
+}

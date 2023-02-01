@@ -39,3 +39,52 @@ public class Solution25 {
         return dummyHead.next;
     }
 }
+
+class Solution {
+    public ListNode reverseKGroup(ListNode head, int k) {
+        if(k == 1){
+            return head;
+        }
+        ListNode dummyHead = new ListNode();
+        ListNode p = dummyHead;
+        ListNode tempHead = null;
+        ListNode tempTail = null;
+
+        int size = 0;
+        ListNode node = head;
+        while(node != null){
+            size++;
+            node = node.next;
+        }
+
+        int i = 0;
+        while(head != null){
+            if(i % k == 0){
+                if(size - i < k){
+                    p.next = head;
+                    break;
+                }
+                tempHead = head;
+                tempTail = head;
+
+                head = head.next;
+                i++;
+            } else {
+                ListNode originalNext = head.next;
+                head.next = tempHead;
+                tempHead = head;
+
+                if(i % k == k-1){
+                    p.next = tempHead;
+                    p = tempTail;
+                    tempTail.next = null;
+                }
+
+                head = originalNext;
+                i++;
+            }
+        }
+
+        return dummyHead.next;
+    }
+}

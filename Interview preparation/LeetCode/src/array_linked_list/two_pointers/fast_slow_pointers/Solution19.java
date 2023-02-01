@@ -22,3 +22,23 @@ public class Solution19 {
         return head;
     }
 }
+
+class Solution19_attempt1 {
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+       ListNode dummyHead = new ListNode();
+       dummyHead.next = head;
+       ListNode preTarget = dummyHead;
+       ListNode afterTarget = dummyHead;
+       for(int i = 0; i < n+1; i++){
+           afterTarget = afterTarget.next;
+       }
+       while(afterTarget != null){
+            preTarget = preTarget.next;
+            afterTarget = afterTarget.next;
+        }
+
+       preTarget.next = preTarget.next.next;
+
+       return dummyHead.next;
+    }
+}

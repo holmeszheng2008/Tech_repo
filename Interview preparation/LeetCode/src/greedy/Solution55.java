@@ -1,17 +1,36 @@
 package greedy;
 
+// 55. Jump Game
 class Solution55 {
     public boolean canJump(int[] nums) {
         int n = nums.length;
         int farthest = 0;
         for (int i = 0; i < n - 1; i++) {
-            // 不断计算能跳到的最远距离
             farthest = Math.max(farthest, i + nums[i]);
-            // 可能碰到了 0，卡住跳不动了
             if (farthest <= i) {
                 return false;
             }
         }
         return farthest >= n - 1;
+    }
+}
+
+class Solution {
+    public boolean canJump(int[] nums) {
+        int left = 0, right = 0;
+        int rightMax = 0;
+        while(true){
+            for(int i = left; i <= right; i++){
+                rightMax = Math.max(rightMax, i + nums[i]);
+            }
+            if(rightMax >= nums.length -1){
+                return true;
+            }
+            if(rightMax == right){
+                return false;
+            }
+            left = right + 1;
+            right = rightMax;
+        }
     }
 }

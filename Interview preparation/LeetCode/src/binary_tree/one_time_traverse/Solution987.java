@@ -1,8 +1,9 @@
 package binary_tree.one_time_traverse;
 
+import util.TreeNode;
+
 import java.util.ArrayList;
 import java.util.List;
-import util.TreeNode;
 
 // 987. Vertical Order Traversal of a Binary Tree
 public class Solution987 {

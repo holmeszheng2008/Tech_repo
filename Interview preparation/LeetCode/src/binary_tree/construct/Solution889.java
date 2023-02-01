@@ -1,8 +1,9 @@
 package binary_tree.construct;
 
+import util.TreeNode;
+
 import java.util.HashMap;
 import java.util.Map;
-import util.TreeNode;
 
 // 889. Construct Binary Tree from Preorder and Postorder Traversal
 public class Solution889 {

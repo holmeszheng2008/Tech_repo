@@ -41,3 +41,42 @@ public class Solution47 {
         }
     }
 }
+
+class Solution47_attempt1 {
+    private int[] nums;
+    private boolean[] used;
+    private List<Integer> path = new ArrayList<>();
+    private List<List<Integer>> res = new ArrayList<>();
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        Arrays.sort(nums);
+        this.nums = nums;
+        this.used = new boolean[nums.length];
+
+        backtracking();
+        return res;
+    }
+
+    private void backtracking(){
+        int preSel = Integer.MAX_VALUE;
+        for(int i = 0; i < nums.length; i++){
+            int num = nums[i];
+            if(used[i] || preSel == num){
+                continue;
+            }
+
+            used[i] = true;
+            path.add(num);
+            preSel = num;
+
+            if(path.size() == nums.length){
+                res.add(new ArrayList<>(path));
+            } else {
+                backtracking();
+            }
+
+            used[i] = false;
+            path.remove(path.size() - 1);
+        }
+    }
+}

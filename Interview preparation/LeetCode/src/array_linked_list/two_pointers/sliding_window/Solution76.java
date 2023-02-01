@@ -45,4 +45,54 @@ public class Solution76 {
     }
 }
 
+class Solution76_attempt1{
+    public String minWindow(String s, String t) {
+        Map<Character, Integer> need = new HashMap<>();
+        for(int i = 0; i < t.length(); i++){
+            char c = t.charAt(i);
+            need.put(c, need.getOrDefault(c, 0) + 1);
+        }
 
+        int fulfilledKeys = 0;
+        Map<Character, Integer> window = new HashMap<>();
+        int left = 0, right = 0;
+        int resLeft = -1, length = Integer.MAX_VALUE;
+
+        while(right < s.length()) {
+            char inChar = s.charAt(right);
+            right++;
+            window.put(inChar, window.getOrDefault(inChar, 0) + 1);
+
+            if(need.containsKey(inChar)){
+                if(window.get(inChar).equals(need.get(inChar))){
+                    fulfilledKeys++;
+                }
+
+                if(fulfilledKeys == need.keySet().size()){
+                    for(; left < right; ){
+                        int tempLength = right - left;
+                        if(length > tempLength){
+                            length = tempLength;
+                            resLeft = left;
+                        }
+
+                        char outChar = s.charAt(left);
+                        left++;
+                        window.put(outChar, window.get(outChar) - 1);
+
+                        if(need.containsKey(outChar) && need.get(outChar) == window.get(outChar) + 1) {
+                            fulfilledKeys--;
+                            break;
+                        }
+                    }
+                }
+            }
+
+        }
+
+        if(length == Integer.MAX_VALUE){
+            return "";
+        }
+        return s.substring(resLeft, resLeft + length);
+    }
+}

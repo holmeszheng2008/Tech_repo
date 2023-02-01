@@ -1,10 +1,11 @@
 package binary_tree.bfs;
 
+import util.TreeNode;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import util.TreeNode;
 
 // 103. Binary Tree Zigzag Level Order Traversal
 public class Solution103 {

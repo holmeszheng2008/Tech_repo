@@ -45,3 +45,55 @@ public class Solution34 {
         return left;
     }
 }
+
+
+class Solution34_attempt1 {
+    public int[] searchRange(int[] nums, int target) {
+        int left = findLeft(nums, target);
+        int right = findRight(nums, target);
+
+        return new int[]{left, right};
+    }
+
+    private int findLeft(int[] nums, int target){
+        int left = 0, right = nums.length - 1;
+        while(left <= right){
+            int middle = left + (right - left) / 2;
+            int value = nums[middle];
+            if(value == target){
+                right = middle - 1;
+            } else if (value > target){
+                right = middle - 1;
+            } else if (value < target){
+                left = middle + 1;
+            }
+        }
+
+        if(left == nums.length || nums[left] != target){
+            return -1;
+        }
+
+        return left;
+    }
+
+    private int findRight(int[] nums, int target){
+        int left = 0, right = nums.length - 1;
+        while(left <= right){
+            int middle = left + (right - left) / 2;
+            int value = nums[middle];
+            if(value == target){
+                left = middle + 1;
+            } else if (value < target){
+                left = middle + 1;
+            } else if (value > target){
+                right = middle - 1;
+            }
+        }
+
+        if(right == -1 || nums[right] != target){
+            return -1;
+        }
+
+        return right;
+    }
+}

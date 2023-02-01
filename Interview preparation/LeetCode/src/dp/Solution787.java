@@ -60,3 +60,50 @@ public class Solution787 {
         return res;
     }
 }
+
+class Solution787_attempt1 {
+    private Integer[][] memo;
+    private List<int[]>[] flightGraph;
+    private int dst;
+    public int findCheapestPrice(int n, int[][] flights, int src, int dst, int k) {
+        this.memo = new Integer[n][k+2];
+        this.dst = dst;
+
+        flightGraph = new ArrayList[n];
+        for(int i = 0; i < n; i++){
+            flightGraph[i] = new ArrayList<>();
+        }
+        for(int i = 0; i < flights.length; i++){
+            int[] flight = flights[i];
+            flightGraph[flight[0]].add(new int[]{flight[1], flight[2]});
+        }
+
+        int res = dp(src, k+1);
+        return  (res == Integer.MAX_VALUE) ? -1 : res;
+    }
+
+    private int dp(int cityIndex, int stepLeft){
+        if(cityIndex == dst && stepLeft >= 0){
+            return 0;
+        }
+
+        if(stepLeft == 0){
+            return Integer.MAX_VALUE;
+        }
+
+        if(memo[cityIndex][stepLeft] != null){
+            return memo[cityIndex][stepLeft];
+        }
+
+        int res = Integer.MAX_VALUE;
+        for(int[] flight : flightGraph[cityIndex]){
+            int tempRes = dp(flight[0], stepLeft - 1);
+            if(tempRes != Integer.MAX_VALUE){
+                res = Math.min(res, tempRes + flight[1]);
+            }
+        }
+
+        memo[cityIndex][stepLeft] = res;
+        return res;
+    }
+}

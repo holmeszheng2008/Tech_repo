@@ -1,8 +1,9 @@
 package binary_tree.one_time_traverse;
 
+import util.TreeNode;
+
 import java.util.HashMap;
 import java.util.Map;
-import util.TreeNode;
 
 // 437. Path Sum III
 public class Solution437 {

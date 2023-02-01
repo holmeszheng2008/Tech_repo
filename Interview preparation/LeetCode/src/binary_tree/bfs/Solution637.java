@@ -1,10 +1,11 @@
 package binary_tree.bfs;
 
+import util.TreeNode;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import util.TreeNode;
 
 // 637. Average of Levels in Binary Tree
 public class Solution637 {

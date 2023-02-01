@@ -64,3 +64,37 @@ class Solution56_attempt1{
         return res.stream().toArray(int[][]::new);
     }
 }
+
+class Solution56_attempt2 {
+    public int[][] merge(int[][] intervals) {
+        List<int[]> res = new ArrayList<>();
+        Arrays.sort(intervals, (o1, o2) -> {
+            if(o1[0] < o2[0]){
+                return -1;
+            } else if (o1[0] > o2[0]){
+                return 1;
+            } else {
+                if(o2[1] < o1[1]) {
+                    return -1;
+                } else {
+                    return 1;
+                }
+            }
+        });
+
+        int left = intervals[0][0], right = intervals[0][1];
+        for(int i = 1; i < intervals.length; i++){
+            if(intervals[i][0] <= right){
+                right = Math.max(intervals[i][1], right);
+            } else {
+                res.add(new int[]{left, right});
+                left = intervals[i][0];
+                right = intervals[i][1];
+            }
+        }
+
+        res.add(new int[]{left, right});
+
+        return res.toArray(int[][]::new);
+    }
+}

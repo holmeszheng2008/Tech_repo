@@ -31,3 +31,29 @@ public class Solution452 {
         return res;
     }
 }
+
+class Solution452_attempt1 {
+    public int findMinArrowShots(int[][] points) {
+        Arrays.sort(points, (o1, o2) -> {
+            if(o1[1] < o2[1]){
+                return -1;
+            } else if (o1[1] == o2[1]){
+                return 0;
+            } else {
+                return 1;
+            }
+        });
+
+        int res = points.length;
+        int right = points[0][1];
+        for(int i = 1; i < points.length; i++){
+            if(right >= points[i][0]){
+                res--;
+            } else {
+                right = points[i][1];
+            }
+        }
+
+        return res;
+    }
+}

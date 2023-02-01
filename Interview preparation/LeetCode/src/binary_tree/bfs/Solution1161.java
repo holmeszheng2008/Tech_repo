@@ -1,8 +1,9 @@
 package binary_tree.bfs;
 
+import util.TreeNode;
+
 import java.util.LinkedList;
 import java.util.Queue;
-import util.TreeNode;
 
 // 1161. Maximum Level Sum of a Binary Tree
 public class Solution1161 {

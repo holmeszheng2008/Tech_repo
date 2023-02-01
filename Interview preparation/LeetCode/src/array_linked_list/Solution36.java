@@ -53,3 +53,39 @@ public class Solution36 {
         return true;
     }
 }
+
+// Use String as key
+class Solution36_attempt1 {
+    public boolean isValidSudoku(char[][] board) {
+        Set<String> set = new HashSet<>();
+
+        for(int i = 0; i < board.length; i++){
+            for(int j = 0; j < board[0].length; j++){
+                char num = board[i][j];
+                if(num == '.') {
+                    continue;
+                }
+                String rowString = rowString(num, i);
+                String colString = colString(num, j);
+                String boxString = boxString(num, i, j);
+                if(set.add(rowString) && set.add(colString) && set.add(boxString)){
+
+                } else {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private String rowString(char num, int row){
+        return "number " + num + " row " + row;
+    }
+    private String colString(char num, int col){
+        return "number " + num +" col " + col;
+    }
+    private String boxString(char num, int row, int col){
+        return "number " + num + " box row " + row / 3 + " col " + col / 3;
+    }
+}

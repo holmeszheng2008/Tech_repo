@@ -31,3 +31,35 @@ public class Solution59 {
         return matrix;
     }
 }
+
+class Solution59_attempt1 {
+    public int[][] generateMatrix(int n) {
+        int[][] res = new int[n][n];
+        int num = 1;
+        for(int step = 0; step <= (n-1)/ 2; step++){
+            int left = step, right = n-1-step, top = step, bottom = n-1-step;
+            if(left == right){
+                res[step][step] = num;
+            } else {
+                for(int i = top, j = left; j < right; j++){
+                    res[i][j] = num;
+                    num++;
+                }
+                for(int i = top, j = right; i < bottom; i++){
+                    res[i][j] = num;
+                    num++;
+                }
+                for(int i = bottom, j = right; j > left; j--){
+                    res[i][j] = num;
+                    num++;
+                }
+                for(int i = bottom, j = left; i > top; i--){
+                    res[i][j] = num;
+                    num++;
+                }
+            }
+        }
+
+        return res;
+    }
+}

@@ -72,7 +72,7 @@ public class Solution315 {
     }
 }
 
-class Solution_attempt1 {
+class Solution315_attempt1 {
     private class Pair {
         public Pair(int index, int value){
             this.index = index;

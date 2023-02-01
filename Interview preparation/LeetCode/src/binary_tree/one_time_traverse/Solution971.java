@@ -1,9 +1,10 @@
 package binary_tree.one_time_traverse;
 
+import util.TreeNode;
+
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import util.TreeNode;
 
 // 971. Flip Binary Tree To Match Preorder Traversal
 public class Solution971 {

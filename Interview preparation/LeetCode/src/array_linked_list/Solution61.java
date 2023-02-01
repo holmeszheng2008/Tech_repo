@@ -37,3 +37,40 @@ public class Solution61 {
         return newHead;
     }
 }
+
+class Solution61_attempt1 {
+    public ListNode rotateRight(ListNode head, int k) {
+        if(head == null){
+            return null;
+        }
+        if(head.next == null){
+            return head;
+        }
+        int size = 0;
+        ListNode lastNode = null;
+        for(ListNode p = head; p != null; p = p.next){
+            size++;
+            if(p.next == null){
+                lastNode = p;
+            }
+        }
+        k = k % size;
+        if(k == 0){
+            return head;
+        }
+
+        ListNode dummyHead = new ListNode();
+        dummyHead.next = head;
+        ListNode preNode = dummyHead;
+
+        for(int i = 0; i < size - k; i++){
+            preNode = preNode.next;
+        }
+
+        dummyHead.next = preNode.next;
+        preNode.next = null;
+        lastNode.next = head;
+
+        return dummyHead.next;
+    }
+}

@@ -1,8 +1,9 @@
 package binary_tree.construct;
 
+import util.TreeNode;
+
 import java.util.HashMap;
 import java.util.Map;
-import util.TreeNode;
 
 // 2196. Create Binary Tree From Descriptions
 public class Solution2196 {

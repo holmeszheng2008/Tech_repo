@@ -1,10 +1,11 @@
 package binary_tree.divide_and_conquer;
 
+import util.TreeNode;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import util.TreeNode;
 
 // 508. Most Frequent Subtree Sum
 public class Solution508 {

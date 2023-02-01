@@ -36,3 +36,34 @@ public class Solution41 {
         return nums.length + 1;
     }
 }
+
+class Solution41_attempt1 {
+    public int firstMissingPositive(int[] nums) {
+        for(int i = 0; i < nums.length;){
+            int targetIndex = nums[i] - 1;
+            if(targetIndex < 0){
+                i++;
+                continue;
+            }
+            if(targetIndex >= nums.length){
+                i++;
+                continue;
+            }
+            if(nums[targetIndex] == targetIndex+1){
+                i++;
+                continue;
+            }
+
+            int temp = nums[i];
+            nums[i] = nums[targetIndex];
+            nums[targetIndex] = temp;
+        }
+
+        for(int i = 0; i < nums.length; i++){
+            if(nums[i] != i+1){
+                return i+1;
+            }
+        }
+        return nums.length + 1;
+    }
+}

@@ -1,8 +1,9 @@
 package binary_tree.divide_and_conquer;
 
+import util.TreeNode;
+
 import java.util.ArrayList;
 import java.util.List;
-import util.TreeNode;
 
 // 1530. Number of Good Leaf Nodes Pairs
 public class Solution1530 {

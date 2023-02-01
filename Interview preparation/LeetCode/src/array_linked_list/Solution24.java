@@ -33,3 +33,41 @@ public class Solution24 {
         return dummyHead.next;
     }
 }
+
+class Solution24_attempt1 {
+    public ListNode swapPairs(ListNode head) {
+        ListNode dummyHead = new ListNode();
+        ListNode p = dummyHead;
+        ListNode tempHead = null;
+        ListNode tempTail = null;
+        int i = 0;
+        while(head != null){
+            if(i % 2 == 0) {
+                tempHead = head;
+                tempTail = head;
+
+                head = head.next;
+                i++;
+            } else {
+                ListNode temp = head.next;
+
+                head.next = tempHead;
+                tempHead= head;
+
+                p.next = tempHead;
+                p = tempTail;
+                p.next = null;
+
+                head = temp;
+                i++;
+            }
+        }
+
+        if(i % 2 != 0){
+            p.next = tempHead;
+            tempTail.next = null;
+        }
+
+        return dummyHead.next;
+    }
+}

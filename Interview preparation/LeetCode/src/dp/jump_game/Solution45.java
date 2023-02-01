@@ -66,3 +66,26 @@ class Solution45_greedy {
         return jumps;
     }
 }
+
+class Solution45_attempt1 {
+    public int jump(int[] nums) {
+        int left = 0, right = 0;
+        int steps = 0;
+        int rightMax = 0;
+        while(true){
+            if(right >= nums.length - 1){
+                return steps;
+            }
+
+            steps++;
+            for(int i = left; i <= right; i++){
+                rightMax = Math.max(rightMax, nums[i] + i);
+            }
+            left = right + 1;
+            if(right == rightMax){
+                return -1;
+            }
+            right= rightMax;
+        }
+    }
+}

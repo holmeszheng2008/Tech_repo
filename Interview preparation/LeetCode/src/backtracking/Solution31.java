@@ -32,3 +32,20 @@ public class Solution31 {
         Arrays.sort(nums, 0, nums.length);
     }
 }
+
+class Solution31_attempt1 {
+    public void nextPermutation(int[] nums) {
+        for(int i = nums.length - 2; i >= 0; i--){
+            for(int j = nums.length - 1; j > i; j--) {
+                if(nums[j] > nums[i]){
+                    int temp = nums[i];
+                    nums[i] = nums[j];
+                    nums[j] = temp;
+                    Arrays.sort(nums, i+1, nums.length);
+                    return;
+                }
+            }
+        }
+        Arrays.sort(nums, 0, nums.length);
+    }
+}

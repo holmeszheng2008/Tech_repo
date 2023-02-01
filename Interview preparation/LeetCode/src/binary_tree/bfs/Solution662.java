@@ -1,8 +1,9 @@
 package binary_tree.bfs;
 
+import util.TreeNode;
+
 import java.util.LinkedList;
 import java.util.Queue;
-import util.TreeNode;
 
 // 662. Maximum Width of Binary Tree
 public class Solution662 {
