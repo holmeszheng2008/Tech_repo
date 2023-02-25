@@ -32,3 +32,35 @@ public class Solution90 {
         }
     }
 }
+
+
+class Solution90_attempt1 {
+    private List<List<Integer>> res = new ArrayList<>();
+    private LinkedList<Integer> path = new LinkedList<>();
+    private int[] nums;
+
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        this.nums = nums;
+        Arrays.sort(nums);
+        res.add(new ArrayList<>());
+
+        backtracking(0);
+        return res;
+    }
+
+    private void backtracking(int start){
+        int pre = Integer.MAX_VALUE;
+        for(int i = start; i < nums.length; i++){
+            if(nums[i] == pre){
+                continue;
+            }
+            pre = nums[i];
+            path.add(nums[i]);
+
+            res.add(new ArrayList<>(path));
+            backtracking(i+1);
+
+            path.removeLast();
+        }
+    }
+}

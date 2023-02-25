@@ -1,15 +1,13 @@
 package leetcode;
 
-import dp.Solution1626;
+import string.Solution126;
+
+import java.util.Arrays;
 
 public class Main {
 
-
-
-    public static void main(String[] args) {
-        Solution1626 inst = new Solution1626();
-        inst.bestTeamScore(new int[]{1,3,7,3,2,4,10,7,5}, new int[]{
-                4,5,2,1,1,2,4,1,4
-        });
+    public static void main(String[] args) throws InterruptedException {
+        Solution126 inst = new Solution126();
+        inst.findLadders("hit","cog", Arrays.asList("hot","dot","dog","lot","log","cog"));
     }
 }

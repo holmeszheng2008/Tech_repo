@@ -35,3 +35,30 @@ public class Solution111 {
         return -1;
     }
 }
+
+class Solution111_attempt1 {
+    private int depth;
+    private int minDepth = Integer.MAX_VALUE;
+    public int minDepth(TreeNode root) {
+        if(root == null){
+            return 0;
+        }
+        dfs(root);
+
+        return minDepth;
+    }
+
+    private void dfs(TreeNode root){
+        if(root == null){
+            return;
+        }
+        depth++;
+        if(root.left == null && root.right == null){
+            minDepth = Math.min(minDepth, depth);
+        }
+        dfs(root.left);
+        dfs(root.right);
+
+        depth--;
+    }
+}

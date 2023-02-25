@@ -24,3 +24,29 @@ public class Solution114 {
         traverse(right);
     }
 }
+
+
+class Solution114_attempt1 {
+    private TreeNode head = new TreeNode();
+    private TreeNode tail = head;
+    public void flatten(TreeNode root) {
+        dfs(root);
+    }
+
+    private void dfs(TreeNode node){
+        if(node == null){
+            return;
+        }
+
+        tail.right = node;
+        tail = node;
+
+        TreeNode orgLeft = node.left;
+        TreeNode orgRight = node.right;
+
+        node.left = null;
+
+        dfs(orgLeft);
+        dfs(orgRight);
+    }
+}

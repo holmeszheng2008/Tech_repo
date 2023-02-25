@@ -34,3 +34,38 @@ public class Solution99 {
     }
 
 }
+
+class Solution99_attempt1 {
+    private TreeNode first;
+    private TreeNode second;
+    private TreeNode pre;
+    public void recoverTree(TreeNode root) {
+        traverse(root);
+
+        int temp = first.val;
+        first.val = second.val;
+        second.val = temp;
+    }
+
+    private void traverse(TreeNode root){
+        if(root == null){
+            return;
+        }
+
+        traverse(root.left);
+
+        if(pre == null) {
+            pre = root;
+        } else {
+            if(pre.val > root.val){
+                if(first == null) {
+                    first = pre;
+                }
+                second = root;
+            }
+
+            pre = root;
+        }
+        traverse(root.right);
+    }
+}

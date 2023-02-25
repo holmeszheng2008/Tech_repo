@@ -16,3 +16,19 @@ public class Solution121 {
         return maxProfit;
     }
 }
+
+class Solution121_attempt1 {
+    public int maxProfit(int[] prices) {
+        int res = 0;
+        int buyPrice = prices[0];
+        for(int i = 1; i < prices.length; i++){
+            if(prices[i] < buyPrice){
+                buyPrice = prices[i];
+            } else {
+                res = Math.max(res, prices[i] - buyPrice);
+            }
+        }
+
+        return res;
+    }
+}

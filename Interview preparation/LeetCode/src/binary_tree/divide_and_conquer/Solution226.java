@@ -17,3 +17,18 @@ public class Solution226 {
         return root;
     }
 }
+
+class Solution226_attempt1 {
+    public TreeNode invertTree(TreeNode root) {
+        if(root == null){
+            return null;
+        }
+        TreeNode orgLeft = root.left;
+        TreeNode orgRight = root.right;
+
+        root.left = invertTree(orgRight);
+        root.right = invertTree(orgLeft);
+
+        return root;
+    }
+}

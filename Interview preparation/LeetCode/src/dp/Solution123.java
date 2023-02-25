@@ -67,3 +67,47 @@ class Solution123_td {
         return res;
     }
 }
+
+
+class Solution123_attempt1 {
+    // index, transactions used, hold
+    private Integer[][][] memo;
+    private int[] prices;
+
+    public int maxProfit(int[] prices) {
+        int n = prices.length;
+        this.prices = prices;
+        this.memo = new Integer[n][3][2];
+
+        return Math.max(Math.max(dp(n-1, 2, 0), dp(n-1, 1, 0)), dp(n-1, 0, 0));
+    }
+
+    private int dp(int index, int used, int hold){
+        if(index == -1){
+            if(hold == 1){
+                return Integer.MIN_VALUE;
+            } else {
+                return 0;
+            }
+        }
+
+
+        if(memo[index][used][hold] != null){
+            return memo[index][used][hold];
+        }
+        int res;
+        if(hold == 0) {
+            res = Math.max(dp(index-1, used, 0), dp(index-1, used, 1) + prices[index]);
+        } else {
+            if(used == 0){
+                res = Integer.MIN_VALUE;
+            } else {
+                res = Math.max(dp(index-1, used, 1), dp(index-1, used - 1, 0) - prices[index]);
+            }
+        }
+
+        memo[index][used][hold] = res;
+
+        return res;
+    }
+}

@@ -26,3 +26,30 @@ public class Solution129 {
         currentSum = (currentSum - root.val) / 10;
     }
 }
+
+class Solution129_attempt1 {
+    private int path = 0;
+    private int res;
+
+    public int sumNumbers(TreeNode root) {
+        dfs(root);
+
+        return res;
+    }
+
+    private void dfs(TreeNode node){
+        if(node == null){
+            return;
+        }
+        path = path * 10 + node.val;
+
+        if(node.left == null && node.right == null){
+            res += path;
+        } else {
+            dfs(node.left);
+            dfs(node.right);
+        }
+
+        path = (path - node.val) / 10;
+    }
+}

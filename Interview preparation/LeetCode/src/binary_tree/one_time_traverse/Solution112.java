@@ -28,3 +28,39 @@ public class Solution112 {
         preSum -= root.val;
     }
 }
+
+class Solution112_attempt1 {
+    private boolean res = false;
+    private int path = 0;
+    private int targetSum;
+    public boolean hasPathSum(TreeNode root, int targetSum) {
+        this.targetSum = targetSum;
+        if(root == null){
+            return false;
+        }
+        dfs(root);
+        return res;
+    }
+
+    private void dfs(TreeNode root){
+        if(root == null){
+            return;
+        }
+        path += root.val;
+        if(root.left == null && root.right == null && path == targetSum){
+            res = true;
+            return;
+        }
+
+        dfs(root.left);
+        if(res){
+            return;
+        }
+        dfs(root.right);
+        if(res){
+            return;
+        }
+
+        path -= root.val;
+    }
+}

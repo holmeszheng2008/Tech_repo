@@ -72,3 +72,33 @@ class Solution105_attempt1 {
         return node;
     }
 }
+
+class Solution105_attempt2 {
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        return buildTree(preorder, 0, preorder.length - 1, inorder, 0, inorder.length - 1);
+    }
+
+    public TreeNode buildTree(int[] preorder, int left1, int right1, int[] inorder, int left2, int right2){
+        if(left1 > right1){
+            return null;
+        }
+        if(left1 == right1){
+            return new TreeNode(preorder[left1]);
+        }
+
+        int rootVal = preorder[left1];
+        int rootIndexInInorder = left2;
+        for(; rootIndexInInorder <= right2; rootIndexInInorder++){
+            if(inorder[rootIndexInInorder] == rootVal){
+                break;
+            }
+        }
+
+        int leftSize = rootIndexInInorder - left2;
+        TreeNode rootNode = new TreeNode(rootVal);
+        rootNode.left = buildTree(preorder, left1 + 1, left1 + leftSize, inorder, left2, rootIndexInInorder - 1);
+        rootNode.right = buildTree(preorder, left1 + 1 + leftSize, right1, inorder, rootIndexInInorder + 1, right2);
+
+        return rootNode;
+    }
+}

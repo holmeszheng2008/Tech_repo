@@ -43,3 +43,43 @@ public class Solution1011 {
     }
 
 }
+
+
+class Solution_attempt1 {
+    public int shipWithinDays(int[] weights, int days) {
+        int left = 1, right = Integer.MAX_VALUE;
+        while(left <= right){
+            int middle = left + (right - left) / 2;
+            int value = func(weights, middle);
+            if(value == days){
+                right = middle - 1;
+            } else if (value < days){
+                right = middle - 1;
+            } else if (value > days){
+                left = middle + 1;
+            }
+        }
+
+        return left;
+    }
+
+    private int func(int[] weights, int capacity){
+        int days = 0;
+        int remaining = capacity;
+        for(int i = 0; i < weights.length; ){
+            if(weights[i] > capacity){
+                return Integer.MAX_VALUE;
+            }
+            if(remaining < weights[i]){
+                remaining = capacity;
+                days++;
+            } else {
+                remaining -= weights[i];
+                i++;
+            }
+        }
+
+        days++;
+        return days;
+    }
+}

@@ -2,7 +2,7 @@ package binary_tree.one_time_traverse;
 
 // 543. Diameter of Binary Tree
 public class Solution543 {
-    public static class TreeNode {
+    private static class TreeNode {
         int val;
         TreeNode left;
         TreeNode right;

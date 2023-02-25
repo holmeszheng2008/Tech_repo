@@ -23,3 +23,46 @@ public class Solution206 {
         return p2;
     }
 }
+
+
+class Solution206_attempt1 {
+    public ListNode reverseList(ListNode head) {
+        ListNode dummyHead = new ListNode();
+        ListNode p = head;
+
+        while(p != null){
+            ListNode orgPNext = p.next;
+            p.next = dummyHead.next;
+            dummyHead.next = p;
+            p = orgPNext;
+        }
+
+        return dummyHead.next;
+    }
+}
+
+
+class Solution206_attempt2 {
+    private ListNode overallHead = null;
+    public ListNode reverseList(ListNode head) {
+        if(head == null){
+            return null;
+        }
+        doReverseList(head);
+
+        return overallHead;
+    }
+
+    private ListNode doReverseList(ListNode head){
+        if(head.next == null){
+            overallHead = head;
+            return head;
+        }
+
+        ListNode tail = doReverseList(head.next);
+        tail.next = head;
+        head.next = null;
+
+        return head;
+    }
+}

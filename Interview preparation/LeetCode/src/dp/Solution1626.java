@@ -40,3 +40,38 @@ public class Solution1626 {
         return ans;
     }
 }
+
+
+class Solution1626_attempt1 {
+    public int bestTeamScore(int[] scores, int[] ages) {
+        int n = scores.length;
+        int[][] values = new int[n][2];
+        for(int i = 0; i < n; i++){
+            values[i] = new int[]{ages[i], scores[i]};
+        }
+
+        Arrays.sort(values, (o1, o2) -> {
+            if(o1[0] == o2[0]){
+                return o1[1] - o2[1];
+            } else {
+                return o1[0] - o2[0];
+            }
+        });
+
+        int[] dp = new int[n];
+        dp[0] = values[0][1];
+        int res = dp[0];
+
+        for(int i = 1; i < n; i++){
+            dp[i] = values[i][1];
+            for(int j = 0; j < i; j++){
+                if(values[j][1] <= values[i][1]){
+                    dp[i] = Math.max(dp[i], dp[j] + values[i][1]);
+                }
+            }
+            res = Math.max(res, dp[i]);
+        }
+
+        return res;
+    }
+}

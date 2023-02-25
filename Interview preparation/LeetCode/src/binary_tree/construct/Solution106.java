@@ -38,3 +38,33 @@ public class Solution106 {
         return node;
     }
 }
+
+class Solution106_attempt1 {
+    private Map<Integer, Integer> inorderIndexMap = new HashMap<>();
+    public TreeNode buildTree(int[] inorder, int[] postorder) {
+        for (int i = 0; i < inorder.length; i++) {
+            inorderIndexMap.put(inorder[i], i);
+        }
+        return buildTree(postorder, 0, inorder.length - 1, inorder, 0, inorder.length - 1);
+    }
+
+    private TreeNode buildTree(int postorder[], int left1, int right1, int[] inorder, int left2, int right2){
+        if(left1 > right1){
+            return null;
+        }
+        if(left1 == right1){
+            return new TreeNode(postorder[left1]);
+        }
+
+        int rootValue = postorder[right1];
+        int rootIndexInorder = inorderIndexMap.get(rootValue);
+
+        int leftSize = rootIndexInorder - left2;
+
+        TreeNode rootNode = new TreeNode(rootValue);
+        rootNode.left = buildTree(postorder, left1, left1 + leftSize - 1, inorder, left2, rootIndexInorder - 1);
+        rootNode.right = buildTree(postorder, left1 + leftSize, right1 - 1, inorder, rootIndexInorder + 1, right2);
+
+        return rootNode;
+    }
+}

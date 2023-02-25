@@ -1,4 +1,4 @@
-package array_linked_list;
+package misc.math;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +20,26 @@ public class Solution118 {
             }
 
             res.add(list);
+        }
+
+        return res;
+    }
+}
+
+class Solution118_attempt1 {
+    public List<List<Integer>> generate(int numRows) {
+        List<List<Integer>> res = new ArrayList<>();
+        for(int i = 0; i < numRows; i++){
+            List<Integer> level = new ArrayList<>();
+            for(int j = 0; j <= i; j++){
+                if(j == 0 || j == i) {
+                    level.add(1);
+                } else {
+                    List<Integer> lastLevel = res.get(i-1);
+                    level.add(lastLevel.get(j-1) + lastLevel.get(j));
+                }
+            }
+            res.add(level);
         }
 
         return res;

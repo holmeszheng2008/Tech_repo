@@ -26,3 +26,26 @@ public class Solution783 {
         traverse(root.right);
     }
 }
+
+
+class Solution783_attempt1 {
+    private int pre = -1;
+    private int minDiff = Integer.MAX_VALUE;
+    public int minDiffInBST(TreeNode root) {
+        dfs(root);
+        return minDiff;
+    }
+
+    private void dfs(TreeNode node){
+        if(node == null){
+            return;
+        }
+        dfs(node.left);
+        if(pre != -1){
+            minDiff = Math.min(minDiff, Math.abs(node.val - pre));
+        }
+        pre = node.val;
+
+        dfs(node.right);
+    }
+}

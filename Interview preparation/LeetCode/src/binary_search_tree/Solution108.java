@@ -20,3 +20,25 @@ public class Solution108 {
         return node;
     }
 }
+
+class Solution108_attempt1 {
+    public TreeNode sortedArrayToBST(int[] nums) {
+        return buildTree(nums, 0, nums.length - 1);
+    }
+
+    private TreeNode buildTree(int[] nums, int left, int right){
+        if(left > right){
+            return null;
+        }
+        if(left == right){
+            return new TreeNode(nums[left]);
+        }
+
+        int middle = left + (right - left) / 2;
+        TreeNode rootNode = new TreeNode(nums[middle]);
+        rootNode.left = buildTree(nums, left, middle - 1);
+        rootNode.right = buildTree(nums, middle + 1, right);
+
+        return rootNode;
+    }
+}

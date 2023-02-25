@@ -37,3 +37,34 @@ public class Solution92 {
         return dummyHead.next;
     }
 }
+
+class Solution92_attempt1 {
+    public ListNode reverseBetween(ListNode head, int left, int right) {
+        if(left == right){
+            return head;
+        }
+
+        ListNode dummyHead = new ListNode();
+        dummyHead.next = head;
+        ListNode preStart = dummyHead;
+        for(int i = 0; i < left - 1; i++){
+            preStart = preStart.next;
+        }
+
+
+        ListNode tail = null, p = preStart.next;
+        for(int i = left; i <= right; i++){
+            if(tail == null){
+                tail = p;
+            }
+            ListNode orgPNext = p.next;
+            p.next = preStart.next;
+            preStart.next = p;
+            p = orgPNext;
+        }
+
+        tail.next = p;
+
+        return dummyHead.next;
+    }
+}

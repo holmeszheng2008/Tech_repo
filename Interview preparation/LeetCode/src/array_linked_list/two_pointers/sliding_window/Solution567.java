@@ -43,3 +43,42 @@ public class Solution567 {
         return false;
     }
 }
+
+
+
+class Solution567_attempt1 {
+    public boolean checkInclusion(String s1, String s2) {
+        if(s1.length() > s2.length()){
+            return false;
+        }
+        Map<Character, Integer> needs = new HashMap<>();
+        Map<Character, Integer> window = new HashMap<>();
+        for(int i = 0; i < s1.length(); i++){
+            char c = s1.charAt(i);
+            needs.put(c, needs.getOrDefault(c, 0) + 1);
+        }
+
+        int left = 0, right = 0, validEntries = 0;
+        while(right < s2.length()) {
+            char inChar = s2.charAt(right);
+            right++;
+            window.put(inChar, window.getOrDefault(inChar, 0) + 1);
+            if(needs.containsKey(inChar) && window.get(inChar).equals(needs.get(inChar))){
+                validEntries++;
+            }
+            if(validEntries == needs.size()){
+                return true;
+            }
+            if(right - left == s1.length()){
+                char outChar = s2.charAt(left);
+                left++;
+                window.put(outChar, window.get(outChar) - 1);
+                if(needs.containsKey(outChar) && window.get(outChar) == needs.get(outChar) - 1) {
+                    validEntries--;
+                }
+            }
+        }
+
+        return false;
+    }
+}
