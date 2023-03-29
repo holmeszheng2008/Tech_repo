@@ -1,4 +1,4 @@
-package graph.traverse;
+package graph.union_find;
 
 import java.util.ArrayList;
 import java.util.List;

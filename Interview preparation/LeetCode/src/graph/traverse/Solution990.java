@@ -1,4 +1,4 @@
-package graph.union_find;
+package graph.traverse;
 
 public class Solution990 {
     public boolean equationsPossible(String[] equations) {

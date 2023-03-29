@@ -74,3 +74,85 @@ public class Solution208 {
         }
     }
 }
+
+
+class Solution208_attempt1 {
+    class Trie {
+        private class TrieNode {
+            public Object value;
+            public TrieNode[] children = new TrieNode[26];
+        }
+
+        private TrieNode root;
+        public Trie() {
+
+        }
+
+        public void insert(String word) {
+            root = doInsert(root, word, 0);
+        }
+
+        private TrieNode doInsert(TrieNode node, String word, int index) {
+            if(node == null){
+                node = new TrieNode();
+            }
+            if(index == word.length()){
+                node.value = new Object();
+                return node;
+            }
+
+            char c = word.charAt(index);
+            node.children[c - 'a'] = doInsert(node.children[c - 'a'], word, index+1);
+
+            return node;
+        }
+
+        public boolean search(String word) {
+            return doSearch(root, word, 0);
+        }
+
+        private boolean doSearch(TrieNode node, String word, int index){
+            if(node == null){
+                return false;
+            }
+
+            if(index == word.length()){
+                if(node.value == null){
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+
+            char c = word.charAt(index);
+
+            return doSearch(node.children[c-'a'], word, index+1);
+        }
+
+        public boolean startsWith(String prefix) {
+            return doStartsWith(root, prefix, 0);
+        }
+
+        private boolean doStartsWith(TrieNode node, String prefix, int index){
+            if(node == null){
+                return false;
+            }
+            if(index == prefix.length()){
+                if(node.value != null){
+                    return true;
+                }
+
+                for(int i = 0; i < 26; i++){
+                    if(node.children[i] != null){
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            char c = prefix.charAt(index);
+            return doStartsWith(node.children[c-'a'], prefix, index+1);
+        }
+    }
+}

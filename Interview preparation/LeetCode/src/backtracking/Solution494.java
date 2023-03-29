@@ -1,5 +1,7 @@
 package backtracking;
 
+import util.Pair;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -182,5 +184,76 @@ class Solution494_dp3_bu {
         }
 
         return dp[nums.length][newTarget];
+    }
+}
+
+class Solution_attempt1_backtracking {
+    private int[] nums;
+    private int path;
+    private int target;
+    private int res;
+    public int findTargetSumWays(int[] nums, int target) {
+        this.nums = nums;
+        this.target = target;
+
+        backtracking(0);
+        return res;
+    }
+
+    private void backtracking(int index){
+        if(index == nums.length){
+            return;
+        }
+
+        path += nums[index];
+        if(path == target && index == nums.length - 1){
+            res++;
+        } else {
+            backtracking(index+1);
+        }
+        path -= nums[index];
+
+
+        path -= nums[index];
+        if(path == target && index == nums.length - 1){
+            res++;
+        } else {
+            backtracking(index+1);
+        }
+        path += nums[index];
+    }
+}
+
+class Solution_attempt1_dp {
+    private int[] nums;
+    private Map<Pair<Integer, Integer>, Integer> memo;
+    public int findTargetSumWays(int[] nums, int target) {
+        this.nums = nums;
+        this.memo = new HashMap<>();
+
+        return dp(0, target);
+    }
+
+    private int dp(int index, int remain){
+        if(index == nums.length){
+            if(remain == 0){
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+
+        Pair<Integer, Integer> key = new Pair<>(index, remain);
+
+        if(memo.get(key) != null){
+            return memo.get(key);
+        }
+
+        int res;
+        res = dp(index+1, remain - nums[index]) + dp(index+1, remain + nums[index]);
+
+        memo.put(key, res);
+
+        return res;
     }
 }

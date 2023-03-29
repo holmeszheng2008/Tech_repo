@@ -64,3 +64,67 @@ public class Solution81 {
         return false;
     }
 }
+
+
+class Solution81_attempt1 {
+    public boolean search(int[] nums, int target) {
+        int leftMin = nums[0];
+        int rightMax = nums[nums.length - 1];
+        if(target < leftMin && target > rightMax){
+            return false;
+        }
+
+        int left = 0, right = nums.length - 1;
+        while(left <= right){
+            int middle = left + (right - left) / 2;
+            int value = nums[middle];
+
+            while(left<= right && nums[left] == nums[right]){
+                if(nums[left] == target){
+                    return true;
+                }
+                left++;
+                right--;
+            }
+
+            if(left > right){
+                break;
+            }
+
+            leftMin = nums[left];
+            if (value < target){
+                if(target >= leftMin) {
+                    if(value >= leftMin){
+                        left = middle + 1;
+                    } else {
+                        right = middle - 1;
+                    }
+                } else {
+                    if(value >= leftMin){
+
+                    } else {
+                        left = middle + 1;
+                    }
+                }
+            } else if (value > target){
+                if(target >= leftMin) {
+                    if(value >= leftMin){
+                        right = middle - 1;
+                    } else {
+
+                    }
+                } else {
+                    if(value >= leftMin){
+                        left = middle + 1;
+                    } else {
+                        right = middle - 1;
+                    }
+                }
+            } else if(value == target){
+                return true;
+            }
+        }
+
+        return false;
+    }
+}

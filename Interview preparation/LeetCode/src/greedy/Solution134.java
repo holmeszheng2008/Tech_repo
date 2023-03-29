@@ -71,3 +71,29 @@ public class Solution134 {
         return start;
     }
 }
+
+class Solution134_attempt1 {
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int minIndex = 0, minValue = Integer.MAX_VALUE;
+        int sum = 0;
+        int n = gas.length;
+        for(int i = 0; i < n; i++){
+            sum = sum - cost[i] + gas[i];
+            if(sum <= minValue){
+                minValue = sum;
+                minIndex = i;
+            }
+        }
+        sum = 0;
+        int start = minIndex + 1;
+        for(int i = start; i < start + n; i++){
+            int index = i % n;
+            sum = sum - cost[index] + gas[index];
+            if(sum < 0){
+                return -1;
+            }
+        }
+
+        return (minIndex + 1) % n;
+    }
+}

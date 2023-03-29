@@ -1,4 +1,4 @@
-package string;
+package dp;
 
 import java.util.HashSet;
 import java.util.List;
@@ -44,7 +44,7 @@ public class Solution139 {
 }
 
 
-class Solution139_attemp1 {
+class Solution139_dp_bu {
     public boolean wordBreak(String s, List<String> wordDict) {
         Set<String> wordDictSet = new HashSet<>(wordDict);
         int n = s.length();
@@ -52,7 +52,7 @@ class Solution139_attemp1 {
 
         dp[0] = true;
         for(int i = 1; i < dp.length; i++){
-            for(int j = 0; j <= i-1; j++){
+            for(int j = 0; j < i; j++){
                 if(!dp[j]) {
                     continue;
                 }

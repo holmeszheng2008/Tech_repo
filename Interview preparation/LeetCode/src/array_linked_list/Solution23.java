@@ -80,3 +80,26 @@ class Solution23_attempt1 {
         return dummyHead.next;
     }
 }
+
+class Solution_attempt2 {
+    public ListNode mergeKLists(ListNode[] lists) {
+        ListNode dummyHead = new ListNode(), tail = dummyHead;
+        PriorityQueue<ListNode> pq = new PriorityQueue<>((o1, o2) -> o1.val - o2.val);
+        for(int i = 0; i < lists.length; i++){
+            if(lists[i] != null){
+                pq.offer(lists[i]);
+            }
+        }
+        while(!pq.isEmpty()){
+            ListNode node = pq.poll();
+            tail.next = node;
+            tail = node;
+            if(node.next != null){
+                pq.offer(node.next);
+            }
+        }
+        tail.next = null;
+
+        return dummyHead.next;
+    }
+}

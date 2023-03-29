@@ -6,20 +6,15 @@ import util.ListNode;
 public class Solution142 {
 
     public ListNode detectCycle(ListNode head) {
-        boolean hasCycle = false;
-        if (head == null || head.next == null) {
-            return null;
-        }
         ListNode slow = head, fast = head;
         while (fast != null && fast.next != null) {
             slow = slow.next;
             fast = fast.next.next;
             if (slow == fast) {
-                hasCycle = true;
                 break;
             }
         }
-        if (!hasCycle) {
+        if (fast == null || fast.next == null) {
             return null;
         }
         slow = head;
@@ -28,5 +23,36 @@ public class Solution142 {
             fast = fast.next;
         }
         return slow;
+    }
+}
+
+
+class Solution142_attempt1 {
+    public ListNode detectCycle(ListNode head) {
+        if(head == null){
+            return null;
+        }
+        ListNode slow = head, fast = head;
+        while(fast.next != null && fast.next.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+
+            if(slow == fast){
+                break;
+            }
+        }
+
+        if(fast.next == null || fast.next.next == null){
+            return null;
+        }
+
+        slow = head;
+        while(true){
+            if(slow == fast){
+                return slow;
+            }
+            slow = slow.next;
+            fast = fast.next;
+        }
     }
 }

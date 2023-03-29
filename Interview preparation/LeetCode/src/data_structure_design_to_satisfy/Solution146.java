@@ -1,6 +1,8 @@
 package data_structure_design_to_satisfy;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 // 146. LRU Cache
@@ -83,4 +85,42 @@ public class Solution146 {
 }
 
 
+class Solution146_attempt1 {
+    class LRUCache {
+        private LinkedHashMap<Integer, Integer> cache = new LinkedHashMap<>();
+        private int capacity;
+        private int currentCapacity = 0;
 
+        public LRUCache(int capacity) {
+            this.capacity = capacity;
+        }
+
+        public int get(int key) {
+            if(cache.containsKey(key)){
+                int value = cache.get(key);
+                put(key, value);
+
+                return value;
+            } else {
+                return -1;
+            }
+        }
+
+        public void put(int key, int value) {
+            if(cache.containsKey(key)){
+                cache.remove(key);
+                cache.put(key, value);
+            } else {
+                if(currentCapacity < capacity) {
+                    currentCapacity++;
+                    cache.put(key, value);
+                } else {
+                    Iterator<Integer> iterator = cache.keySet().iterator();
+                    cache.remove(iterator.next());
+                    cache.put(key, value);
+                }
+            }
+        }
+    }
+
+}

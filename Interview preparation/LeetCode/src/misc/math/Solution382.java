@@ -24,3 +24,27 @@ public class Solution382 {
         return res;
     }
 }
+
+class Solution382_attempt1 {
+    private Random random;
+    private ListNode head;
+
+    public Solution382_attempt1(ListNode head) {
+        this.head = head;
+        this.random = new Random();
+    }
+
+    public int getRandom() {
+        int res = 0, i = 0;
+        ListNode p = head;
+        while(p != null){
+            if(random.nextInt(++i) == 0){
+                res = p.val;
+            }
+            p = p.next;
+        }
+
+        return res;
+    }
+}
+

@@ -50,3 +50,48 @@ public class Solution150 {
         return res * sign;
     }
 }
+
+class Solution150_attempt1 {
+    public int evalRPN(String[] tokens) {
+        Stack<Integer> stack = new Stack<>();
+        for(String token : tokens){
+            if(token.equals("+") || token.equals("-") || token.equals("*") || token.equals("/")) {
+                int operand2 = stack.pop();
+                int operand1 = stack.pop();
+                switch(token){
+                    case "+" -> {
+                        stack.push(operand1 + operand2);
+                    }
+                    case "-" -> {
+                        stack.push(operand1 - operand2);
+                    }
+                    case "*" -> {
+                        stack.push(operand1 * operand2);
+                    }
+                    case "/" -> {
+                        stack.push(operand1 / operand2);
+                    }
+                }
+            } else {
+                stack.push(convertToInt(token));
+            }
+        }
+
+        return stack.pop();
+    }
+
+    private int convertToInt(String s){
+        int sign = 1, start = 0;
+        if(s.charAt(0) == '-'){
+            sign = -1;
+            start = 1;
+        }
+        int sum = 0;
+        for(; start < s.length(); start++){
+            char c = s.charAt(start);
+            sum = sum * 10 + c - '0';
+        }
+
+        return sign * sum;
+    }
+}
