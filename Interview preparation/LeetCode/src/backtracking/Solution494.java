@@ -257,3 +257,71 @@ class Solution_attempt1_dp {
         return res;
     }
 }
+
+class Solution494_attempt2_td {
+    private Map<String, Integer> memo = new HashMap<>();
+    private int[] nums;
+    private int target;
+
+    public int findTargetSumWays(int[] nums, int target) {
+        this.nums = nums;
+        this.target = target;
+        return dp(0, 0);
+    }
+
+    private int dp(int i, int sum){
+        if(i == nums.length) {
+            if(sum == target) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+
+        String key = i + "," + sum;
+        if(memo.get(key) != null){
+            return memo.get(key);
+        }
+
+        int res = dp(i + 1, sum - nums[i]) + dp(i+1, sum + nums[i]);
+        memo.put(key, res);
+
+        return res;
+    }
+}
+
+class Solution494_attempt2_backtracking {
+    private int res;
+    private int[] nums;
+    private int target;
+
+    public int findTargetSumWays(int[] nums, int target) {
+        this.nums = nums;
+        this.target = target;
+
+        backtracking(0, 0);
+        return res;
+    }
+
+    private void backtracking(int index, int sum){
+        sum = sum - nums[index];
+        if(index == nums.length-1) {
+            if (sum == target) {
+                res++;
+            }
+        } else {
+            backtracking(index+1, sum);
+        }
+        sum = sum + nums[index];
+
+        sum += nums[index];
+        if(index == nums.length-1) {
+            if (sum == target) {
+                res++;
+            }
+        } else {
+            backtracking(index+1, sum);
+        }
+        sum -= nums[index];
+    }
+}

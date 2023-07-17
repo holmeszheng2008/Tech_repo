@@ -87,12 +87,10 @@ class Solution98_attempt2 {
         if(resGot){
             return null;
         }
-
         long[] right = divide(root.right);
         if(resGot){
             return null;
         }
-
 
         if(root.val > left[1] && root.val < right[0]){
             return new long[]{
@@ -104,5 +102,32 @@ class Solution98_attempt2 {
             res = false;
             return null;
         }
+    }
+}
+
+// traverse
+class Solution98_attempt3 {
+    private boolean res = true;
+    public boolean isValidBST(TreeNode root) {
+        dfs(root, Long.MIN_VALUE, Long.MAX_VALUE);
+
+        return res;
+    }
+
+    private void dfs(TreeNode root, long min, long max){
+        if(!res){
+            return;
+        }
+        if(root == null){
+            return;
+        }
+
+        if(root.val >= max || root.val <= min){
+            res = false;
+            return;
+        }
+
+        dfs(root.left, min, root.val);
+        dfs(root.right, root.val, max);
     }
 }

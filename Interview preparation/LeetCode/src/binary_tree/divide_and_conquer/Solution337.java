@@ -24,3 +24,27 @@ public class Solution337 {
         return new int[] {take, notTake};
     }
 }
+
+
+class Solution337_attempt1 {
+    public int rob(TreeNode root) {
+        int[] res = divide(root);
+        return Math.max(res[0], res[1]);
+    }
+
+    // 0 -> take root
+    // 1 -> not take root
+    private int[] divide(TreeNode root){
+        if(root == null){
+            return new int[]{0, 0};
+        }
+
+        int[] leftLoot = divide(root.left);
+        int[] rightLoot = divide(root.right);
+
+        int take = root.val + leftLoot[1] + rightLoot[1];
+        int notTake = Math.max(leftLoot[0], leftLoot[1]) + Math.max(rightLoot[0], rightLoot[1]);
+
+        return new int[]{take, notTake};
+    }
+}

@@ -77,3 +77,39 @@ class Solution22_attempt1 {
 
     }
 }
+
+class Solution22_attempt2 {
+    private List<String> res = new ArrayList<>();
+    private StringBuilder path = new StringBuilder();
+    private int n;
+    public List<String> generateParenthesis(int n) {
+        this.n = n;
+
+        backtracking(0, 0);
+        return res;
+    }
+
+    private void backtracking(int leftUsed, int diff){
+        if(leftUsed < n){
+            path.append("(");
+            leftUsed++;
+            diff++;
+            backtracking(leftUsed, diff);
+            path.deleteCharAt(path.length() - 1);
+            leftUsed--;
+            diff--;
+        }
+        if(diff > 0){
+            path.append(")");
+            diff--;
+            if(leftUsed == n && diff == 0){
+                res.add(path.toString());
+            } else {
+                backtracking(leftUsed, diff);
+            }
+
+            path.deleteCharAt(path.length() - 1);
+            diff++;
+        }
+    }
+}

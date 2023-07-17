@@ -1,25 +1,9 @@
 package binary_tree.one_time_traverse;
 
+import util.TreeNode;
+
 // 543. Diameter of Binary Tree
 public class Solution543 {
-    private static class TreeNode {
-        int val;
-        TreeNode left;
-        TreeNode right;
-
-        TreeNode() {}
-
-        TreeNode(int val) {
-            this.val = val;
-        }
-
-        TreeNode(int val, TreeNode left, TreeNode right) {
-            this.val = val;
-            this.left = left;
-            this.right = right;
-        }
-    }
-
     private int maxDiameter = 0;
 
     public int diameterOfBinaryTree(TreeNode root) {
@@ -37,5 +21,28 @@ public class Solution543 {
         this.maxDiameter = Math.max(this.maxDiameter, diameter);
 
         return 1 + Math.max(leftDepth, rightDepth);
+    }
+}
+
+
+class Solution543_attempt1 {
+    private int maxDiameter = Integer.MIN_VALUE;
+    public int diameterOfBinaryTree(TreeNode root) {
+        getMaxDepth(root);
+
+        return maxDiameter;
+    }
+
+    private int getMaxDepth(TreeNode root){
+        if(root == null){
+            return 0;
+        }
+
+        int left = getMaxDepth(root.left);
+        int right= getMaxDepth(root.right);
+
+        maxDiameter = Math.max(maxDiameter, left + right);
+
+        return 1 + Math.max(left, right);
     }
 }

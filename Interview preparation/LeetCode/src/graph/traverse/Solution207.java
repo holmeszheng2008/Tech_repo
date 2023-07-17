@@ -54,3 +54,56 @@ public class Solution207 {
         path.remove(s);
     }
 }
+
+
+class Solution207_attempt1 {
+    private boolean[] visited;
+    private boolean hasCycle = false;
+    private List<Integer>[] graph;
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        this.graph = new ArrayList[numCourses];
+        this.visited = new boolean[numCourses];
+        for(int[] prerequisite : prerequisites){
+            List<Integer> list = graph[prerequisite[0]];
+            if(list == null){
+                list = new ArrayList<>();
+                graph[prerequisite[0]] = list;
+            }
+
+            list.add(prerequisite[1]);
+        }
+
+        for(int i = 0; i < numCourses; i++){
+            if(!visited[i]){
+                dfs(i, new HashSet<>());
+            }
+        }
+
+        return !hasCycle;
+    }
+
+    private void dfs(int node, Set<Integer> path){
+        if(path.contains(node)){
+            hasCycle = true;
+            return;
+        }
+        if(visited[node]){
+            return;
+        }
+
+        visited[node] = true;
+        path.add(node);
+
+        List<Integer> nextNodes = graph[node];
+        if(nextNodes != null){
+            for(int nextNode : nextNodes){
+                dfs(nextNode, path);
+                if(hasCycle){
+                    return;
+                }
+            }
+        }
+
+        path.remove(node);
+    }
+}

@@ -6,6 +6,7 @@ import java.util.*;
 class Solution1345_bfs {
     public int minJumps(int[] arr) {
         Map<Integer, List<Integer>> map = new HashMap<>();
+        Set<Integer> visited = new HashSet<>();
         for(int i = 0; i < arr.length; i++){
             int value = arr[i];
             List<Integer> list = map.get(value);
@@ -19,20 +20,24 @@ class Solution1345_bfs {
         int step = 0;
         Queue<Integer> queue = new LinkedList<>();
         queue.add(0);
+        visited.add(0);
         while(!queue.isEmpty()){
             int size = queue.size();
-            Set<Integer> nextLevelSet = new HashSet<>();
             for(int i = 0; i < size; i++){
                 int index = queue.poll();
                 if(index == arr.length - 1){
                     return step;
                 }
                 List<Integer> nextIndices = nextIndices(index, arr, map);
-                nextLevelSet.addAll(nextIndices);
+                for(int nextIndex : nextIndices){
+                    if(!visited.contains(nextIndex)){
+                        queue.add(nextIndex);
+                        visited.add(nextIndex);
+                    }
+                }
             }
 
             step++;
-            queue.addAll(nextLevelSet);
         }
 
         return -1;
@@ -138,5 +143,63 @@ public class Solution1345 {
         map.remove(arr[index]);
 
         return list;
+    }
+}
+
+class Solution_attempt1 {
+    private Map<Integer, List<Integer>> graph;
+    private Set<Integer> visited;
+    public int minJumps(int[] arr) {
+        this.visited = new HashSet<>();
+        this.graph = new HashMap<>();
+        int n = arr.length;
+        for(int i = 0; i < arr.length; i++){
+            int value = arr[i];
+            List<Integer> list = graph.get(value);
+            if(list == null){
+                list = new ArrayList<>();
+                graph.put(value, list);
+            }
+            list.add(i);
+        }
+
+        int step = 0;
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(0);
+        visited.add(0);
+        while(!queue.isEmpty()){
+            int size = queue.size();
+            for(int i = 0; i < size; i++){
+                int index = queue.poll();
+                if(index == n-1){
+                    return step;
+                }
+
+                if(index-1 >= 0 && !visited.contains(index-1)) {
+                    queue.add(index-1);
+                    visited.add(index-1);
+                }
+                if(index +1 < n && !visited.contains(index+1)){
+                    queue.add(index+1);
+                    visited.add(index+1);
+                }
+                List<Integer> list = graph.get(arr[index]);
+                if(list == null){
+                    continue;
+                }
+                for(int nextIndex : list){
+                    if(!visited.contains(nextIndex)){
+                        queue.add(nextIndex);
+                        visited.add(nextIndex);
+                    }
+                }
+
+                graph.remove(arr[index]);
+
+            }
+            step++;
+        }
+
+        return -1;
     }
 }
