@@ -1,9 +1,6 @@
 package data_structure_design_to_satisfy;
 
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 // 460. LFU Cache
 public class Solution460 {
@@ -182,3 +179,79 @@ class Solution460_attempt1{
     }
 
 }
+
+class Solution460_attempt2 {
+    class LFUCache {
+
+        private Map<Integer, Integer> data = new HashMap<>();
+        private Map<Integer, Integer> keyToFreqMap = new HashMap<>();
+        private Map<Integer, Set<Integer>> freqToKeySetMap = new HashMap<>();
+        private int currentCapacity = 0;
+        private int lowestFreq = 0;
+        private int capacity;
+
+        public LFUCache(int capacity) {
+            this.capacity = capacity;
+        }
+
+        public int get(int key) {
+            if (data.containsKey(key)) {
+                int value = data.get(key);
+                put(key, value);
+                return value;
+            } else {
+                return -1;
+            }
+        }
+
+        public void put(int key, int value) {
+            if (data.containsKey(key)) {
+                int freq = keyToFreqMap.get(key);
+                Set<Integer> keySet = freqToKeySetMap.get(freq);
+                keySet.remove(key);
+                if (keySet.isEmpty()) {
+                    freqToKeySetMap.remove(freq);
+                    if (lowestFreq == freq) {
+                        lowestFreq++;
+                    }
+                }
+                freq++;
+                keyToFreqMap.put(key, freq);
+                data.put(key, value);
+                Set<Integer> nextKeySet = freqToKeySetMap.get(freq);
+                if (nextKeySet == null) {
+                    nextKeySet = new LinkedHashSet<>();
+                    freqToKeySetMap.put(freq, nextKeySet);
+                }
+                nextKeySet.add(key);
+            } else {
+                if (currentCapacity == capacity) {
+                    Set<Integer> lowestKeySet = freqToKeySetMap.get(lowestFreq);
+                    Iterator<Integer> iterator = lowestKeySet.iterator();
+                    int lfuKey = iterator.next();
+
+                    data.remove(lfuKey);
+                    lowestKeySet.remove(lfuKey);
+                    keyToFreqMap.remove(lfuKey);
+                    if (lowestKeySet.isEmpty()) {
+                        freqToKeySetMap.remove(lowestFreq);
+                    }
+                    currentCapacity--;
+                }
+                lowestFreq = 1;
+                currentCapacity++;
+                Set<Integer> keySet = freqToKeySetMap.get(1);
+                if (keySet == null) {
+                    keySet = new LinkedHashSet<>();
+                    freqToKeySetMap.put(1, keySet);
+                }
+                keySet.add(key);
+                data.put(key, value);
+                keyToFreqMap.put(key, 1);
+            }
+        }
+    }
+}
+
+
+

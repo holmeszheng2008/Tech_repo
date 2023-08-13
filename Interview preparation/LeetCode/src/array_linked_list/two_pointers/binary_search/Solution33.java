@@ -107,3 +107,46 @@ class Solution33_attempt1 {
         return -1;
     }
 }
+
+class Solution33_attempt2 {
+    public int search(int[] nums, int target) {
+        int n = nums.length;
+        int leftMin = nums[0], rightMax = nums[n-1];
+        if(target < leftMin && target > rightMax){
+            return -1;
+        }
+
+        int left = 0, right = n-1;
+        while(left <= right){
+            int middle = left + (right - left) / 2;
+            int value = nums[middle];
+            if(target >= leftMin){
+                if(value >= leftMin){
+                    if(value == target){
+                        return middle;
+                    } else if (value < target){
+                        left = middle + 1;
+                    } else if (value > target){
+                        right = middle - 1;
+                    }
+                } else {
+                    right = middle - 1;
+                }
+            } else {
+                if(value >= leftMin){
+                    left = middle + 1;
+                } else {
+                    if(value == target){
+                        return middle;
+                    } else if (value < target){
+                        left = middle + 1;
+                    } else if (value > target){
+                        right = middle - 1;
+                    }
+                }
+            }
+        }
+
+        return -1;
+    }
+}

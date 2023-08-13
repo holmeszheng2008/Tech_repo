@@ -31,3 +31,30 @@ public class Solution435 {
         return res;
     }
 }
+
+class Solution435_attempt1 {
+    public int eraseOverlapIntervals(int[][] intervals) {
+        Arrays.sort(intervals, (o1, o2) -> {
+            if(o1[1] < o2[1]){
+                return -1;
+            } else if (o1[1] > o2[1]){
+                return 1;
+            } else {
+                return o2[0] - o1[0];
+            }
+        });
+
+        int res = 0;
+        int start = intervals[0][0], end = intervals[0][1];
+        for(int i = 1; i < intervals.length; i++){
+            if(intervals[i][0] >= end) {
+                start = intervals[i][0];
+                end = intervals[i][1];
+            } else {
+                res++;
+            }
+        }
+
+        return res;
+    }
+}

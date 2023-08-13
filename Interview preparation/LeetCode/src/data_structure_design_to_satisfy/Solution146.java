@@ -55,6 +55,7 @@ public class Solution146 {
             node.pre = head;
             head.next = node;
         }
+
         public void put(int key, int value) {
             if (cache.containsKey(key)) {
                 makeRecent(key, value);
@@ -96,7 +97,7 @@ class Solution146_attempt1 {
         }
 
         public int get(int key) {
-            if(cache.containsKey(key)){
+            if (cache.containsKey(key)) {
                 int value = cache.get(key);
                 put(key, value);
 
@@ -107,11 +108,11 @@ class Solution146_attempt1 {
         }
 
         public void put(int key, int value) {
-            if(cache.containsKey(key)){
+            if (cache.containsKey(key)) {
                 cache.remove(key);
                 cache.put(key, value);
             } else {
-                if(currentCapacity < capacity) {
+                if (currentCapacity < capacity) {
                     currentCapacity++;
                     cache.put(key, value);
                 } else {
@@ -122,5 +123,47 @@ class Solution146_attempt1 {
             }
         }
     }
+}
 
+class Solution146_attempt2 {
+    class LRUCache {
+        private int capacity;
+        private int currentCapacity = 0;
+
+        private LinkedHashMap<Integer, Integer> data = new LinkedHashMap<>();
+
+        public LRUCache(int capacity) {
+            this.capacity = capacity;
+        }
+
+        public int get(int key) {
+            if(data.containsKey(key)){
+                int value = data.get(key);
+                data.remove(key);
+                data.put(key, value);
+
+                return value;
+            } else {
+                return -1;
+            }
+        }
+
+        public void put(int key, int value) {
+            if(data.containsKey(key)) {
+                data.remove(key);
+                data.put(key, value);
+            } else {
+                if(currentCapacity == capacity){
+                    Iterator<Integer> iterator = data.keySet().iterator();
+                    int oldestKey = iterator.next();
+                    data.remove(oldestKey);
+
+                    currentCapacity--;
+                }
+
+                currentCapacity++;
+                data.put(key, value);
+            }
+        }
+    }
 }

@@ -106,3 +106,102 @@ class Solution131_attempt1 {
         return true;
     }
 }
+
+class Solution_attempt2 {
+    private List<List<String>> res = new ArrayList<>();
+    private List<String> path = new ArrayList<>();
+
+    private String s;
+    public List<List<String>> partition(String s) {
+        this.s = s;
+        backtracking(0);
+        return res;
+    }
+
+    private void backtracking(int start) {
+        for(int i = start; i <= s.length() - 1; i++){
+            if(!isPalindrome(start, i)) {
+                continue;
+            }
+            String part = s.substring(start, i+1);
+            path.add(part);
+
+            if(i == s.length() - 1){
+                res.add(new ArrayList<>(path));
+            } else {
+                backtracking(i+1);
+            }
+
+            path.remove(path.size() - 1);
+        }
+    }
+
+    private boolean isPalindrome(int i, int j){
+        while(i < j){
+            if(s.charAt(i) != s.charAt(j)){
+                return false;
+            }
+            i++;
+            j--;
+        }
+
+        return true;
+    }
+}
+
+class Solution_attempt2_dp {
+    private String s;
+    private List<List<String>>[] memo;
+    public List<List<String>> partition(String s) {
+        this.s = s;
+        this.memo = new List[s.length()];
+        return dp(0);
+    }
+
+    private List<List<String>> dp(int start) {
+        if(start == s.length()){
+            return null;
+        }
+
+        if(memo[start] != null){
+            return memo[start];
+        }
+        List<List<String>> res = new ArrayList<>();
+        for(int i = start; i <= s.length() - 1; i++){
+            if(!isPalindrome(start, i)) {
+                continue;
+            }
+            String part = s.substring(start, i+1);
+
+            List<List<String>> subList = dp(i + 1);
+            if(subList == null){
+                List<String> newList = new ArrayList<>();
+                newList.add(part);
+                res.add(newList);
+            } else {
+                for(List<String> list : subList){
+                    List<String> newList = new ArrayList<>();
+                    newList.add(part);
+                    newList.addAll(list);
+                    res.add(newList);
+                }
+            }
+
+        }
+
+        memo[start] = res;
+        return res;
+    }
+
+    private boolean isPalindrome(int i, int j){
+        while(i < j){
+            if(s.charAt(i) != s.charAt(j)){
+                return false;
+            }
+            i++;
+            j--;
+        }
+
+        return true;
+    }
+}

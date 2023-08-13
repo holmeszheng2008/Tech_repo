@@ -68,3 +68,40 @@ class Solution46_attempt1 {
         }
     }
 }
+
+
+class Solution46_attempt2 {
+    private List<List<Integer>> res;
+    private boolean[] used;
+    private List<Integer> path;
+    private int[] nums;
+    public List<List<Integer>> permute(int[] nums) {
+        int n = nums.length;
+        this.res = new ArrayList<>();
+        this.used = new boolean[n];
+        this.path = new ArrayList<>();
+        this.nums = nums;
+
+        backtracking();
+
+        return res;
+    }
+
+    private void backtracking(){
+        for(int i = 0; i < nums.length; i++){
+            if(used[i]){
+                continue;
+            }
+            used[i] = true;
+            path.add(nums[i]);
+            if(path.size() == nums.length){
+                res.add(new ArrayList<>(path));
+            } else {
+                backtracking();
+            }
+
+            used[i] = false;
+            path.remove(path.size() - 1);
+        }
+    }
+}

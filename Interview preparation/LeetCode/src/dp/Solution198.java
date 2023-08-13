@@ -40,3 +40,29 @@ class Solution198_td {
         return res;
     }
 }
+
+
+class Solution198_attempt2 {
+    public int rob(int[] nums) {
+        int n = nums.length;
+        int[][] dp = new int[n+1][2];
+        for(int i = 1; i < n+1; i++){
+            dp[i][0] = Math.max(dp[i-1][0], dp[i-1][1]);
+            dp[i][1] = dp[i-1][0] + nums[i-1];
+        }
+
+        return Math.max(dp[n][0], dp[n][1]);
+    }
+}
+
+class Solution198_attempt3 {
+    public int rob(int[] nums) {
+        int n = nums.length;
+        int[] dp = new int[n+2];
+        for(int i = n-1; i >= 0; i--){
+            dp[i] = Math.max(dp[i+1], dp[i+2] + nums[i]);
+        }
+
+        return dp[0];
+    }
+}

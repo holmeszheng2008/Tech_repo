@@ -156,3 +156,88 @@ class Solution208_attempt1 {
         }
     }
 }
+
+
+class Solution208_attempt2 {
+    class Trie {
+        private TrieNode root;
+
+        private static class TrieNode {
+            public Object value;
+            public TrieNode[] children;
+
+            public TrieNode() {
+                this.children = new TrieNode[26];
+            }
+        }
+        public Trie() {
+
+        }
+
+        public void insert(String word) {
+            root = doInsert(root, 0, word);
+        }
+
+        private TrieNode doInsert(TrieNode node, int i, String word){
+            if(node == null){
+                node = new TrieNode();
+            }
+
+            if(i == word.length()){
+                node.value = new Object();
+                return node;
+            }
+
+            char c = word.charAt(i);
+            node.children[c-'a'] = doInsert(node.children[c-'a'], i+1, word);
+
+
+            return node;
+        }
+
+        public boolean search(String word) {
+            TrieNode node = root;
+            if(root == null){
+                return false;
+            }
+            for(int i = 0; i < word.length(); i++){
+                char c = word.charAt(i);
+                TrieNode nextNode = node.children[c-'a'];
+                if(nextNode == null){
+                    return false;
+                }
+
+                node = nextNode;
+            }
+
+            return node.value != null;
+        }
+
+        public boolean startsWith(String prefix) {
+            TrieNode node = root;
+            if(root == null){
+                return false;
+            }
+            for(int i = 0; i < prefix.length(); i++){
+                char c = prefix.charAt(i);
+                TrieNode nextNode = node.children[c-'a'];
+                if(nextNode == null){
+                    return false;
+                }
+
+                node = nextNode;
+            }
+
+            if(node.value != null){
+                return true;
+            }
+            for(int i = 0; i < 26; i++){
+                if(node.children[i] != null){
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    }
+}

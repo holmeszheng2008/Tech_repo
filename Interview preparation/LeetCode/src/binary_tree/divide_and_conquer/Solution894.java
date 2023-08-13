@@ -2,10 +2,7 @@ package binary_tree.divide_and_conquer;
 
 import util.TreeNode;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Solution894 {
     private Map<Integer, List<TreeNode>> memo = new HashMap<>();
@@ -39,5 +36,38 @@ public class Solution894 {
         }
         memo.put(n, res);
         return res;
+    }
+}
+
+
+class Solution_attempt1 {
+    public List<TreeNode> allPossibleFBT(int n) {
+        List<TreeNode> res = new ArrayList<>();
+        if(n % 2 == 0){
+            return res;
+        }
+
+        Map<Integer, List<TreeNode>> memo = new HashMap<>();
+        memo.put(1, Arrays.asList(new TreeNode(0)));
+        for(int i = 3; i <= n; i+=2){
+            List<TreeNode> list = new ArrayList<>();
+            for(int j = 1; j < i - 1; j += 2){
+                int leftNum = j, rightNum = i -1 - j;
+                List<TreeNode> leftCom = memo.get(leftNum);
+                List<TreeNode> rightCom = memo.get(rightNum);
+
+                for(TreeNode leftNode : leftCom){
+                    for(TreeNode rightNode : rightCom){
+                        TreeNode root = new TreeNode(0);
+                        root.left = leftNode;
+                        root.right = rightNode;
+                        list.add(root);
+                    }
+                }
+            }
+            memo.put(i, list);
+        }
+
+        return memo.get(n);
     }
 }

@@ -76,3 +76,36 @@ class Solution50_attempt1 {
         }
     }
 }
+
+class Solution50_attempt2 {
+    public double myPow(double x, int n) {
+        if(x == 0){
+            return 0;
+        }
+        if(n == 0){
+            return 1;
+        }
+        if(n > 0) {
+            return helper(x, n);
+        } else {
+            if(n == Integer.MIN_VALUE){
+                return 1 / (helper(x, Integer.MAX_VALUE) * x);
+            } else {
+                return 1 / helper(x, -n);
+            }
+        }
+    }
+
+    // n > 0
+    private double helper(double x, int n){
+        if(n == 1){
+            return x;
+        }
+        if(n % 2 == 0){
+            double part = helper(x, n/2);
+            return part * part;
+        } else {
+            return x * helper(x, n-1);
+        }
+    }
+}

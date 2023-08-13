@@ -128,3 +128,103 @@ class Solution81_attempt1 {
         return false;
     }
 }
+
+class Solution81_attempt2 {
+    public boolean search(int[] nums, int target) {
+        int n = nums.length;
+        int left = 0, right = n-1;
+        while(left <= right){
+            while(left <= right && nums[left] == nums[right]){
+                if (nums[left] == target) {
+                    return true;
+                } else {
+                    left++;
+                    right--;
+                }
+            }
+            if(left > right){
+                return false;
+            }
+
+            int middle = left + (right - left) / 2;
+            int value = nums[middle];
+            if(target >= nums[left]){
+                if(value >= nums[left]){
+                    if(value == target){
+                        return true;
+                    } else if (value < target){
+                        left = middle + 1;
+                    } else if (value > target){
+                        right = middle - 1;
+                    }
+                } else {
+                    right = middle - 1;
+                }
+            } else {
+                if(value >= nums[left]){
+                    left = middle + 1;
+                } else {
+                    if(value == target){
+                        return true;
+                    } else if (value < target){
+                        left = middle + 1;
+                    } else if (value > target){
+                        right = middle - 1;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+}
+
+class Solution81_attempt3 {
+    public boolean search(int[] nums, int target) {
+        int n = nums.length;
+        int left = 0, right = n - 1;
+        while (left <= right && nums[left] == nums[right]) {
+            if (nums[left] == target) {
+                return true;
+            } else {
+                left++;
+                right--;
+            }
+        }
+        if (left > right) {
+            return false;
+        }
+        int leftMin = nums[left];
+        while (left <= right) {
+            int middle = left + (right - left) / 2;
+            int value = nums[middle];
+            if (target >= leftMin) {
+                if (value >= leftMin) {
+                    if (value == target) {
+                        return true;
+                    } else if (value < target) {
+                        left = middle + 1;
+                    } else if (value > target) {
+                        right = middle - 1;
+                    }
+                } else {
+                    right = middle - 1;
+                }
+            } else {
+                if (value >= leftMin) {
+                    left = middle + 1;
+                } else {
+                    if (value == target) {
+                        return true;
+                    } else if (value < target) {
+                        left = middle + 1;
+                    } else if (value > target) {
+                        right = middle - 1;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+}

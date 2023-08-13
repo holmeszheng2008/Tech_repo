@@ -66,3 +66,23 @@ class Solution206_attempt2 {
         return head;
     }
 }
+
+class Solution206_attempt4 {
+    private ListNode dummyHead = new ListNode();
+    private ListNode tail = dummyHead;
+    public ListNode reverseList(ListNode head) {
+        dfs(head);
+        return dummyHead.next;
+    }
+
+    private void dfs(ListNode head){
+        if(head == null){
+            return;
+        }
+        dfs(head.next);
+
+        head.next = null;
+        tail.next = head;
+        tail = head;
+    }
+}
