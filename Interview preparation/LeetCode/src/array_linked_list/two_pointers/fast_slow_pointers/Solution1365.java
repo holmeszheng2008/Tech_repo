@@ -65,3 +65,57 @@ class Solution1365_2 {
         return res;
     }
 }
+
+class Solution1365_attempt1 {
+    public int[] smallerNumbersThanCurrent(int[] nums) {
+        int[][] data = new int[nums.length][];
+        for(int i = 0; i < nums.length; i++){
+            data[i] = new int[]{nums[i], i};
+        }
+
+        int[] res = new int[nums.length];
+
+        Arrays.sort(data, (o2, o1) -> o1[0] - o2[0]);
+        LinkedList<Integer> indices = new LinkedList<>();
+        int preValue = data[0][0];
+        indices.add(data[0][1]);
+        for(int i = 1; i < data.length; i++){
+            int value = data[i][0];
+            int curIndex = data[i][1];
+            if(value != preValue){
+                while(!indices.isEmpty()) {
+                    int index = indices.removeLast();
+                    res[index] = nums.length - i;
+                }
+                preValue = value;
+            }
+            indices.add(curIndex);
+        }
+        while(!indices.isEmpty()) {
+            int index = indices.removeLast();
+            res[index] = 0;
+        }
+
+        return res;
+    }
+}
+
+class Solution1365_attempt2 {
+    public int[] smallerNumbersThanCurrent(int[] nums) {
+
+        Map<Integer, Integer> map = new HashMap<>();
+        int[] copy = nums.clone();
+
+        Arrays.sort(copy);
+
+        for (int i = 0; i < nums.length; i++) {
+            map.putIfAbsent(copy[i], i);
+        }
+
+        for (int i = 0; i < nums.length; i++) {
+            copy[i] = map.get(nums[i]);
+        }
+
+        return copy;
+    }
+}
